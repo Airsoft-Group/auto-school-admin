@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Modern UI Starter Template
 
 [![Vue.js Version](https://img.shields.io/badge/Vue.js-v3.x-4FC08D?style=flat-square&logo=vue.js)](https://vuejs.org/)
@@ -124,3 +125,6 @@ This template is designed to be easily customizable:
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+=======
+# autoschool
+>>>>>>> e481f8d6f2e2fbb34c3fa19e758055184f11230f
