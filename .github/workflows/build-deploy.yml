@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'main'
-      - 'dev'
   workflow_dispatch:
   release:
     types: [published]
@@ -13,60 +12,42 @@ jobs:
   docker_build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-      - name: Build and push main branch
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push to Prod
         if: github.ref_name == 'main'
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USER }}/${{ github.event.repository.name }}:latest
-          
-  unit_test:
-    needs: docker_build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Unit Test
-        run: |
-          echo "Needs implement unit tests"
-
-  regression_test:
-    needs: docker_build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Unit Test
-        run: |
-          echo "Needs implement regression tests"
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
 
   deploy:
-    needs: 
-      - unit_test
-      - regression_test
-    runs-on: barakali-ayol-runner
+    name: deploy to prod
+    needs: docker_build
+    runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Production
+      - name: Deploy Node.js app to Prod
         if: github.ref_name == 'main'
-        run: |
-          docker pull ailabcau/ayol-edu-admin:latest
-          docker service update \
-            --force \
-            --with-registry-auth \
-            --detach=false \
-            --image ailabcau/ayol-edu-admin:latest \
-            ayol_edu_prod_admin_ui         
-          docker container prune -f
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+            docker service update --force --with-registry-auth --detach=false --image ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest avto_school_admin_ui
+            docker container prune -f
