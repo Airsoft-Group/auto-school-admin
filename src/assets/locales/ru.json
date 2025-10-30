@@ -1,0 +1,15 @@
+{
+    "noTitle": "No title ru",
+    "CA": "Certificate of admission",
+    "CS": "Certificate of study",
+    "FE": "For embassy",
+    "MO": "For military office",
+    "validation": {
+        "fillField": "Пожалуйста заполните это поле",
+        "inputusername": "Пожалуйста, введите адрес электронной почты",
+        "minimumLength": "Минимальная длина {value}",
+        "maximumLength": "Максимальный длина {value}",
+        "pattern": "Введите в правильном формате",
+        "passwordsDontMatch": "Два пароля не совпадают!"
+    }
+}

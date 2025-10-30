@@ -1,0 +1,28 @@
+@forward 'element-plus/theme-chalk/src/common/var.scss' with ($colors: ('primary': ('base': #2563EB,
+        ),
+    ),
+    $border-radius: ('base': 10px,
+    ),
+    //inputs
+    $input: ('border': #D0D5DD,
+        'bg-color': #ffffff,
+        'height': '37px',
+        'height-small': 24px,
+        'height-large': '44px',
+        'text-color': #667085,
+        'placeholder-color': '#C1C1C1',
+        'border-radius': '8px',
+        'font-size': '14px'
+    ),
+    $input-padding-horizontal: ('large': 12px,
+    ),
+    $button: ('height': '37px',
+        'height-small': '24px',
+        'height-large': '44px',
+        'font-size': '12px',
+        'text-color': '#333333',
+        'font-weight': '400',
+        'font-size-large': '12px'
+    ));
+
+@use 'element-plus/theme-chalk/src/index.scss' as *;

@@ -1,0 +1,502 @@
+@use '../colors.scss' as colors;
+
+// Common styles for Element Plus components based on design screenshots
+
+// Button styling
+.el-button {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    border-radius: 8px;
+    height: 40px;
+    padding: 8px 16px;
+
+    &--primary {
+        background-color: #2563EB;
+        border-color: #2563EB;
+
+        &:hover,
+        &:focus {
+            background-color: #2563EB;
+            border-color: #2563EB;
+        }
+    }
+
+    &.is-plain {
+        &.el-button--primary {
+            color: #2563EB;
+            background-color: #fff;
+            border-color: #2563EB;
+
+            &:hover,
+            &:focus {
+                background-color: #e7f2f1;
+            }
+        }
+    }
+
+    &.is-round {
+        border-radius: 20px;
+    }
+}
+
+// Card styling
+.el-card {
+    border-radius: 12px;
+    border: 1px solid #EAECF0;
+    box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+
+    .el-card__header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #EAECF0;
+        font-weight: 600;
+    }
+
+    .el-card__body {
+        padding: 20px;
+    }
+}
+
+.el-form {
+    .el-form-item {
+        margin-bottom: 24px !important;
+
+        &__label {
+            font-family: Inter;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 150%;
+            letter-spacing: 0%;
+            color: #111928 !important;
+
+            &::before {
+                display: none;
+            }
+        }
+
+        &__error {
+            margin-top: 4px !important;
+            font-size: 12px;
+        }
+    }
+
+    .el-input__inner::placeholder {
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 125%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        opacity: 0.5;
+        color: #111928 !important;
+    }
+
+    .el-input__wrapper {
+        box-shadow: 0 0 0 1px #D1D5DB inset;
+        border-radius: 10px;
+        background: #F9FAFB !important;
+        padding: 0 12px;
+        min-height: 44px;
+
+        &:hover {
+            box-shadow: 0 0 0 1px #98A2B3 inset;
+        }
+
+        &.is-focus {
+            box-shadow: 0 0 0 1.5px #2563EB inset !important;
+        }
+    }
+
+    .el-textarea__inner::placeholder {
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 125%;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        opacity: 0.5;
+        color: #111928 !important;
+    }
+
+    .el-textarea__inner {
+        box-shadow: 0 0 0 1px #D1D5DB inset;
+        border-radius: 10px;
+        background: #F9FAFB !important;
+        // padding: 0 12px;
+        padding: 12px;
+        // height: 44px;
+
+        &:hover {
+            box-shadow: 0 0 0 1px #98A2B3 inset;
+        }
+
+        &.is-focus {
+            box-shadow: 0 0 0 1.5px #2563EB inset !important;
+        }
+    }
+
+    .el-select {
+        width: 100%;
+
+        &__inner::placeholder {
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 125%;
+            letter-spacing: 0%;
+            vertical-align: middle;
+            opacity: 0.5;
+            color: #111928 !important;
+        }
+
+        &__wrapper {
+            box-shadow: 0 0 0 1px #D1D5DB inset;
+            border-radius: 10px;
+            background: #F9FAFB !important;
+            padding: 0 12px;
+            min-height: 44px;
+
+            &:hover {
+                box-shadow: 0 0 0 1px #98A2B3 inset;
+            }
+
+            &.is-focus {
+                box-shadow: 0 0 0 1.5px #2563EB inset !important;
+            }
+        }
+
+        &__selection {
+            .el-tag {
+                border-color: #D1D5DB !important;
+            }
+        }
+    }
+}
+
+
+
+.el-popper {
+    border-radius: 12px !important;
+}
+
+.el-dialog {
+    border-radius: 12px;
+    overflow: hidden;
+
+    &__header {
+        margin: 0;
+        padding: 20px 24px;
+        border-bottom: 1px solid #EAECF0;
+
+        .el-dialog__title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #101828;
+        }
+    }
+
+    &__body {
+        padding: 24px;
+    }
+
+    &__footer {
+        padding: 16px 24px;
+        border-top: 1px solid #EAECF0;
+        margin-top: 0;
+    }
+
+    &__close {
+        svg {
+            fill: #101828 !important;
+        }
+    }
+}
+
+// Input
+
+.el-input {
+    font-family: Inter;
+
+    &.transparent {
+        .el-input__wrapper {
+            background-color: transparent !important;
+        }
+    }
+
+    .el-input__inner::placeholder {
+        color: #667085;
+    }
+
+    &__inner {
+        font-weight: 500;
+        font-size: 14px !important;
+        // height: 37px !important;
+    }
+
+    &--small {
+        height: 24px;
+    }
+
+    &--large {
+        height: 44px !important;
+    }
+
+}
+
+
+// Button
+
+.el-button {
+    font-family: 'Inter';
+
+    &--large {
+        font-weight: 500;
+        font-size: 14px !important;
+        line-height:
+            17.01px !important;
+        height: 44px !important;
+    }
+
+    &.is-disabled {
+        background-color: #E7EAF1 !important;
+        border: none !important;
+        color: #9DA6B6 !important;
+        font-weight: 600;
+    }
+
+}
+
+// TABLE
+
+.el-table {
+    &--fit {
+        border-right: 1px solid #EAECF0 !important;
+    }
+
+    tr {
+        background-color: transparent !important;
+    }
+
+    thead {
+        th {
+            background-color: #F9FAFB !important;
+            padding: 12px 24px !important;
+            border-bottom: 1px solid #EAECF0 !important;
+            font-family: 'Inter' !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            line-height: 14.06px !important;
+            color: #475467 !important;
+
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                padding: 14px 24px !important;
+                font-family: 'Inter';
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 15.73px;
+                color: #101828;
+
+                &.el-table-fixed-column--right {
+                    z-index: 9;
+                    background: white !important;
+                }
+
+            }
+        }
+    }
+}
+
+
+// Table styling
+.el-table {
+    --el-table-header-bg-color: #F9FAFB;
+    --el-table-border-color: #EAECF0;
+
+    border-radius: 12px;
+    border: 1px solid #EAECF0;
+    overflow: hidden;
+
+    th {
+        font-weight: 500;
+        font-size: 12px;
+        color: #667085;
+        padding: 12px 16px;
+        background-color: #F9FAFB;
+        border-bottom: 1px solid #EAECF0;
+    }
+
+    td {
+        font-size: 14px;
+        color: #101828;
+        padding: 16px;
+        border-bottom: 1px solid #EAECF0;
+    }
+
+    .el-table__row:hover>td {
+        background-color: #F9FAFB !important;
+    }
+
+    .el-button--text {
+        padding: 0;
+        height: auto;
+
+        &:hover {
+            color: #0b4ec0;
+        }
+    }
+}
+
+// tag
+
+.el-tag {
+    font-family: Inter;
+    font-size: 12px !important;
+    font-weight: 500;
+    line-height: 18px;
+    // background: #F9FAFB ;
+
+    &--info {
+        background: #F9FAFB !important;
+        border: 1px solid #EAECF0;
+
+        .el-tag__content {
+            color: #344054;
+        }
+    }
+
+    &--success {
+        background: #ECFDF3 !important;
+        border: 1px solid #ABEFC6;
+
+        .el-tag__content {
+            color: #2563EB !important;
+        }
+    }
+}
+
+// Pagination
+
+.el-pagination {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+        background: transparent !important;
+        padding: 8px 12px 8px 12px !important;
+        border-radius: 8px !important;
+        font-family: Inter;
+        font-size: 14px !important;
+        font-weight: 600;
+        line-height: 20px;
+        color: #475467;
+    }
+
+    .el-pager {
+
+        .more,
+        .number {
+            border-radius: 17px !important;
+            height: 28px !important;
+            background: transparent !important;
+
+            &.is-active {
+                background: #2563EB !important;
+                // color: #101828 !important;
+            }
+        }
+    }
+}
+
+.el-dialog {
+    background-color: #ffffff !important;
+    border-radius: 16px !important;
+
+    &__title {
+        font-family: 'Inter';
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 150%;
+        letter-spacing: 0%;
+        color: #111928;
+
+    }
+
+    &__close {
+        font-size: 16px !important;
+        color: black !important;
+        font-weight: 700;
+    }
+
+    &__body {
+        padding-top: 10px !important;
+    }
+}
+
+.el-drawer {
+    &__title {
+        font-family: 'Inter';
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 150%;
+        letter-spacing: 0%;
+        color: #111928;
+
+    }
+
+    &__header {
+        margin-bottom: 10px !important;
+    }
+}
+
+.whiteStripe {
+    border-radius: 14px;
+    border: 1px solid #eaecf0;
+    background: #fff;
+    overflow-x: auto;
+
+    /* Shadows/shadow-xs */
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+
+    .el-table__body {
+        overflow: hidden;
+    }
+
+    .el-table__cell {
+        padding: 14px 0px !important;
+    }
+
+    th {
+        color: #475467 !important;
+        font-size: 12px;
+        font-weight: 500;
+        border: none !important;
+        border-bottom: #f8f8f8;
+        background-color: #f8f8f8 !important;
+    }
+
+    tr {
+        border: none !important;
+
+        td {
+            border: none !important;
+            border-top: 1px solid #eaecf0 !important;
+            color: #475467 !important;
+            font-size: 14px !important;
+        }
+    }
+
+    tr:hover {
+        td {
+            background-color: white !important;
+        }
+    }
+
+    .hover-row>td {
+        background-color: white !important;
+    }
+}

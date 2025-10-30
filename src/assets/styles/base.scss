@@ -1,0 +1,49 @@
+@use './tailwind.scss';
+@use '@/assets/styles/app' as app;
+@use '@/assets/styles/var' as vars;
+@use './element/components.scss' as components;
+@use '../fonts/index.css' as fonts;
+
+.item {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #d9d9d9;
+
+    &.disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+        color: #8f8f8f;
+    }
+
+    span {
+        color: #9b9b9b;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .left {
+        path {
+            fill: #9b9b9b;
+        }
+    }
+
+    &:hover {
+        color: white;
+        background: #1265e9;
+
+        span {
+            color: white;
+        }
+
+        .left {
+            path {
+                fill: white;
+            }
+        }
+    }
+}
