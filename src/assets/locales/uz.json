@@ -1,3 +1,57 @@
 {
-    "noTitle": "No title uz"
+    "app": {
+        "title": "AvtoTest",
+        "login": "Kirish",
+        "logout": "Chiqish",
+        "profile": "Profil",
+        "subjects": "Mavzular bo‘yicha testlar",
+        "tickets": "Biletlar bo‘yicha testlar",
+        "exam": "Imtihon topshirish",
+        "ticket_list": "Biletlar ro‘yxati",
+        "topic_list": "Mavzular ro‘yxati",
+        "back": "Orqaga"
+    },
+    "dashboard": {
+        "hello": "Salom, {name}! 👋",
+        "level": "Daraja: Boshlang‘ich",
+        "continue": "Bugun test ishlashni davom ettiramizmi? Quyidagilardan birini tanlang:",
+        "stats": {
+            "tests_done": "Ishlangan testlar",
+            "best_score": "Eng yuqori natija",
+            "last_test": "So‘nggi test"
+        },
+        "cards": {
+            "topics": {
+                "title": "Mavzular bo‘yicha testlar",
+                "desc": "Har bir mavzuni alohida o‘rganing va test ishlang.",
+                "btn": "Boshlash"
+            },
+            "tickets": {
+                "title": "Biletlar bo‘yicha testlar",
+                "desc": "Rasmiy imtihon biletlari asosida mashq qiling.",
+                "btn": "Boshlash"
+            },
+            "exam": {
+                "title": "Yakuniy imtihon",
+                "desc": "Real imtihon formatida o‘zingizni sinab ko‘ring.",
+                "btn": "Topshirish"
+            }
+        },
+        "recent": {
+            "title": "So‘nggi testlar",
+            "name": "Test nomi",
+            "score": "Natija (%)",
+            "date": "Sana",
+            "status": "Holat",
+            "passed": "O‘tgan",
+            "failed": "O‘tolmagan"
+        }
+    },
+    "test": {
+        "question": "Savol",
+        "next": "Keyingisi",
+        "exam_finished": "Test yakunlandi!",
+        "restart": "Qayta boshlash",
+        "finish_exam": "Testni yakunlash"
+    }
 }

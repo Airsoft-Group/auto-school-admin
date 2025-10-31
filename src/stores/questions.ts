@@ -31,6 +31,8 @@ export interface Questions {
 interface QuestionState {
     questions: ApiResponse<Questions>
     currentQuestion: any
+    questionSubjectId: any
+    questionTicketId: any
 }
 
 export const useQuestionStore = defineStore('question', {
@@ -39,6 +41,8 @@ export const useQuestionStore = defineStore('question', {
             data: [] as any,
         },
         currentQuestion: null,
+        questionSubjectId: null,
+        questionTicketId: null,
     }),
 
     actions: {
@@ -49,6 +53,14 @@ export const useQuestionStore = defineStore('question', {
         async viewQuestion(id: string) {
             const response = await request.get(`/v1/questions/${id}`)
             this.currentQuestion = response
+        },
+        async fetchQuestionSubjectById(subjectId: string) {
+            const response = await request.get(`/v1/questions/subject/${subjectId}`)
+            this.questionSubjectId = response
+        },
+        async fetchQuestionTicketById(id: string) {
+            const response = await request.get(`/v1/questions/ticket/${id}`)
+            this.questionTicketId = response
         },
         // async createUser(payload: Users) {
         //     return request.post('/v1/users', payload)

@@ -15,6 +15,23 @@ const router = createRouter({
                     component: () => import('../views/home/HomeView.vue'),
                     meta: { isPublic: true },
                 },
+                {
+                    path: 'topics',
+                    name: 'topics',
+                    component: () => import('../views/home/TopicView.vue'),
+                    meta: { isPublic: true },
+                },
+                {
+                    path: 'topics/:id',
+                    name: 'TopicTests',
+                    component: () => import('@/views/home/components/TopicTestView.vue'),
+                },
+                {
+                    path: 'tickets',
+                    name: 'tickets',
+                    component: () => import('../views/home/TicketView.vue'),
+                    meta: { isPublic: true },
+                },
             ],
         },
         {

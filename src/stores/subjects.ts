@@ -4,7 +4,7 @@ import request from '@/services/api'
 import { ApiResponse } from '@/types'
 
 export interface Subjects {
-    id?: number
+    id: string
     name: {
         oz: string
         uz: string
