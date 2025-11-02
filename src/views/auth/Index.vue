@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen">
         <div class="h-[95vh] flex items-center justify-center">
-            <img class="w-[50%] h-full object-contain" :src="AutoSchoolImage" alt="auto-school" />
+            <img class="w-[50%] h-full object-fill" src="@/assets/images/driving-school-animate.svg" alt="auto-school" />
             <div class="box w-full">
                 <div class="text-center mx-auto w-full max-w-[370px]">
                     <LogoIcon class="mx-auto fixed top-8 left-8 max-w-[120px]" />
@@ -62,7 +62,6 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import AutoSchoolImage from '@/assets/images/auto-school.png'
 const store = useUserStore()
 const router = useRouter()
 const ruleFormRef = ref<FormInstance>()

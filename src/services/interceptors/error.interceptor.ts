@@ -2,60 +2,59 @@ import { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '../../router'
 
-// Common error handler to avoid duplication
+// ✅ Umumiy xatolikni qayta ishlovchi funksiya
 export const handleCommonError = (error: any, redirectToLogin = false) => {
-    // Default error message
     let message = 'Xatolik yuz berdi'
-    // Extract detailed error message if available
-    if (error.response?.data) {
-        const errorData = error.response.data
-        // Check for validation errors in different formats
+
+    const errorData = error.response?.data
+
+    if (errorData) {
         if (errorData.error?.details && Array.isArray(errorData.error.details)) {
-            // Format is { error: { details: ["Error 1", "Error 2"] } }
+            // { error: { details: ["Error 1", "Error 2"] } }
             message = errorData.error.details.join('. ')
         } else if (errorData.message) {
-            // Format is { message: "Error message" }
+            // { message: "Error message" }
             message = errorData.message
         } else if (errorData.error?.message) {
-            // Format is { error: { message: "Error message" } }
+            // { error: { message: "Error message" } }
             message = errorData.error.message
         } else if (typeof errorData.error === 'string') {
-            // Format is { error: "Error message" }
+            // { error: "Error message" }
             message = errorData.error
         }
     }
 
-    // Show error message
-    ElMessage({
-        message,
-        type: 'error',
-        duration: 5 * 1000,
-    })
+    // 🔹 Faqat foydalanuvchiga ko‘rsatiladigan xabar
+    if (message && message !== 'Unauthorized') {
+        ElMessage({
+            message,
+            type: 'error',
+            duration: 4000,
+        })
+    }
 
-    // Redirect to login if needed and not already on login page
-    // if (redirectToLogin && !window.location.pathname.includes('/login')) {
-    //     router.push('/login')
-    // }
+    // 🔹 Login sahifasiga yo‘naltirish
     if (redirectToLogin && !window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
+        router.push('/login')
     }
 }
 
-// Error response interceptor
+// ✅ Xatoliklarni tutuvchi interceptor
 export const setupErrorResponseInterceptor = (instance: AxiosInstance) => {
     instance.interceptors.response.use(
-        // Transform successful responses
+        // 1️⃣ Muvaffaqiyatli javob
         (response) => response.data,
-        // Handle errors
+        // 2️⃣ Xatolikni tutish
         async (error) => {
-            // Let auth interceptor handle 401 errors
-            // if (error.response?.status === 401) {
-            //   console.log('Error interceptor: detected 401, bypassing...');
-            //   // return false
-            //   return Promise.reject(error);
-            // }
+            const status = error.response?.status
 
-            // For other errors, show message
+            // 🔹 401 holatni auth.interceptor hal qiladi, shuning uchun bu yerda o'tkazib yuboramiz
+            if (status === 401) {
+                console.log('Error interceptor: 401 detected → handled by auth interceptor')
+                return Promise.reject(error)
+            }
+
+            // 🔹 403 yoki 500 va boshqa xatoliklarni ko‘rsatish
             handleCommonError(error, false)
 
             return Promise.reject(error)

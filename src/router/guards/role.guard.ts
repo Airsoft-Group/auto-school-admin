@@ -12,21 +12,28 @@ export default function roleGuard(to: RouteLocationNormalized, from: RouteLocati
     const { user } = store
     const meta = to.meta as RouteMeta
 
-    // 🔹 Rol ko‘rsatilmagan bo‘lsa → ruxsat beramiz
+    const publicPages = ['/', '/login', '/register', '/forgot-password']
+    if (publicPages.includes(to.path)) {
+        next()
+        return
+    }
+
     if (!meta.roles || meta.roles.length === 0) {
         next()
         return
     }
 
-    // 🔹 Foydalanuvchi yo‘q bo‘lsa → login sahifasiga
     if (!user) {
-        next('/login')
+        ElMessage({
+            message: 'Bu sahifaga kirish uchun tizimga kiring',
+            type: 'warning',
+        })
+        next('/')
         return
     }
 
     const userRole = user.role ?? 'user'
 
-    // 🔹 Agar foydalanuvchi roli sahifadagi rollar ro‘yxatida bo‘lsa → ruxsat
     if (Array.isArray(meta.roles) && meta.roles.includes(userRole)) {
         next()
         return

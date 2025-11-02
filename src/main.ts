@@ -9,9 +9,9 @@ import { i18n } from './utils/i18n'
 import 'element-plus/dist/index.css'
 import '@/assets/styles/base.scss'
 import '@/assets/styles/element/index.scss'
-
-import VueTheMask from 'vue-the-mask';
-import type { Plugin } from 'vue';
+import { MotionPlugin } from '@vueuse/motion'
+import VueTheMask from 'vue-the-mask'
+import type { Plugin } from 'vue'
 async function start() {
     const app = createApp(App)
 
@@ -20,13 +20,13 @@ async function start() {
 
     app.use(router)
     app.use(i18n)
+    app.use(MotionPlugin)
     app.use(ElementPlus, {
         // locale: elementEnLocale,
     })
 
-
     app.use(createPinia())
-    app.use(VueTheMask as unknown as Plugin);
+    app.use(VueTheMask as unknown as Plugin)
     app.mount('#app')
     app.config.globalProperties.eventBus = mitt()
 }

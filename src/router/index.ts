@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import routeModules from './modules'
 import { setupRouterGuards } from './guards'
 
 const router = createRouter({
@@ -31,6 +30,11 @@ const router = createRouter({
                     name: 'tickets',
                     component: () => import('../views/home/TicketView.vue'),
                     meta: { isPublic: true },
+                },
+                {
+                    path: 'tickets/:id',
+                    name: 'TicketTests',
+                    component: () => import('@/views/home/components/TickerTestView.vue'),
                 },
             ],
         },

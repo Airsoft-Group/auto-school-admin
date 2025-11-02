@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full mx-auto">
+    <div class="w-full mx-auto p-6">
         <div class="flex flex-col items-start justify-start gap-4 mb-6">
             <el-button type="text" @click="router.push('/')" class="!p-0 flex items-center text-gray-600 hover:text-blue-600 transition">
                 <el-icon><ArrowLeft /></el-icon>

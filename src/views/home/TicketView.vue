@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full">
+    <div class="w-full p-6">
         <!-- Header with back button -->
         <div class="flex flex-col items-start justify-start gap-3 mb-6">
             <el-button type="text" @click="router.push('/')" class="!p-0 text-gray-600 hover:text-blue-600 transition">

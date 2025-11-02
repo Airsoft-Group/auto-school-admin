@@ -8,27 +8,20 @@ export default async function authGuard(to: RouteLocationNormalized, from: Route
     const publicPages = ['/', '/login', '/register', '/forgot-password']
     const authRequired = !publicPages.includes(to.path)
 
-    if (authRequired) {
-        if (!store.token) {
-            ElMessage({
-                message: 'Iltimos, tizimga kiring',
-                type: 'warning',
-            })
-            return next(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
+    if (store.token && !store.user) {
+        try {
+            await store.fetchUserInfo()
+        } catch {
+            store.resetToken()
         }
+    }
 
-        if (store.token && !store.user) {
-            try {
-                await store.fetchUserInfo()
-            } catch {
-                store.$reset()
-                ElMessage({
-                    message: 'Sessiya muddati tugadi. Iltimos, qayta kiring.',
-                    type: 'error',
-                })
-                return next(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
-            }
-        }
+    if (authRequired && !store.token) {
+        ElMessage({
+            message: 'Iltimos, tizimga kiring',
+            type: 'warning',
+        })
+        return next(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
     }
 
     if (to.path === '/login' && store.token) {

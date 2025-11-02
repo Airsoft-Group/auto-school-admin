@@ -2,7 +2,7 @@
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
         <header class="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-20">
-            <h1 class="text-xl font-bold text-[#303030]">Auto Test</h1>
+            <h1 class="text-2xl font-extrabold text-gray-800 leading-tight">Avto<span class="text-blue-600">School</span></h1>
             <div class="flex items-center gap-4">
                 <!-- Language selector -->
                 <el-select v-model="lang" @change="setLocale(locale)" class="!w-20">
@@ -50,7 +50,7 @@
             </div>
         </header>
 
-        <main class="flex-1 p-6 overflow-y-auto">
+        <main class="flex-1 overflow-y-auto">
             <router-view v-slot="{ Component }">
                 <transition name="fade" mode="out-in">
                     <component :is="Component" />
@@ -78,7 +78,9 @@ const { t, locale } = useI18n()
 const lang = ref(localStorage.getItem('lang') || 'uz')
 
 onMounted(() => {
-    userStore.fetchUserInfo()
+    if (userStore.token) {
+        userStore.fetchUserInfo()
+    }
 })
 watch(lang, async (newLang) => {
     await setLocale(newLang)
