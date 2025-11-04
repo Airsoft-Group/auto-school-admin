@@ -171,9 +171,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 })
                 ElMessage.success('Subject updated successfully')
             } else {
-                await subjectStore.createSubject({
-                    name: ruleForm.name,
-                })
+                await subjectStore.createSubject({ name: ruleForm.name })
                 ElMessage.success('Subject created successfully')
             }
             await fetchList()

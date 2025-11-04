@@ -33,6 +33,7 @@ interface QuestionState {
     currentQuestion: any
     questionSubjectId: any
     questionTicketId: any
+    translate: any
 }
 
 export const useQuestionStore = defineStore('question', {
@@ -43,6 +44,7 @@ export const useQuestionStore = defineStore('question', {
         currentQuestion: null,
         questionSubjectId: null,
         questionTicketId: null,
+        translate: null,
     }),
 
     actions: {
@@ -62,15 +64,19 @@ export const useQuestionStore = defineStore('question', {
             const response = await request.get(`/v1/questions/ticket/${id}`)
             this.questionTicketId = response
         },
-        // async createUser(payload: Users) {
-        //     return request.post('/v1/users', payload)
-        // },
-        // async updateUser(id: string, payload: Partial<Users>) {
-        //     return request.put(`/v1/users/${id}`, payload)
-        // },
-        // async deleteUser(id: string) {
-        //     return request.delete(`/v1/users/${id}`)
-        // },
+        async fetchTranslateText(data: { text: string; sourceLanguage: string }) {
+            const response = await request.post('/v1/translation/translate-multiple', data)
+            this.translate = response
+        },
+        async createQuestion(payload: any) {
+            return request.post('/v1/questions', payload)
+        },
+        async updateQuestion(id: string, payload: any) {
+            return request.put(`/v1/questions/${id}`, payload)
+        },
+        async deleteQuestion(id: string) {
+            return request.delete(`/v1/questions/${id}`)
+        },
         // async viewPassword(id: string) {
         //     const response = await request.get(`/v1/users/${id}/password`)
         //     this.password = response
