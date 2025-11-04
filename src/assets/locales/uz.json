@@ -52,6 +52,35 @@
         "next": "Keyingisi",
         "exam_finished": "Test yakunlandi!",
         "restart": "Qayta boshlash",
-        "finish_exam": "Testni yakunlash"
+        "finish_exam": "Testni yakunlash",
+        "great_job": "Ajoyib ish, shunday davom eting!",
+        "correct_answers": "To‘g‘ri javoblar"
+    },
+    "landing": {
+        "subtitle_line1": "Sizning yo‘ldagi",
+        "subtitle_line2": "hamrohingiz",
+        "description": "Haydovchilik guvohnomasiga tayyorlanish uchun mukammal joy: yo‘l harakati qoidalarini o‘rganing, interaktiv testlarni yeching va haqiqiy imtihon oldidan o‘zingizni sinab ko‘ring.",
+        "login_button": "Tizimga kirish"
+    },
+    "auth": {
+        "login_title": "Tizimga kirish",
+        "login_description": "Tizimga kirish uchun login va parolingizni kiriting.",
+        "login_label": "Login",
+        "password_label": "Parol",
+        "login_placeholder": "Loginingizni kiriting",
+        "password_placeholder": "Parolingizni kiriting",
+        "login_button": "Kirish",
+        "back_to_home": "Asosiy sahifaga qaytish",
+        "or_text": "yoki"
+    },
+    "validation": {
+        "email_required": "Iltimos, loginni kiriting",
+        "password_required": "Iltimos, parolni kiriting",
+        "password_min": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak"
+    },
+    "messages": {
+        "login_success": "Tizimga muvaffaqiyatli kirdingiz",
+        "login_error": "Login yoki parol noto‘g‘ri",
+        "unknown_error": "Noma’lum xatolik yuz berdi"
     }
 }

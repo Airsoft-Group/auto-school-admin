@@ -2,7 +2,9 @@
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
         <header class="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-20">
-            <h1 class="text-2xl font-extrabold text-gray-800 leading-tight">Avto<span class="text-blue-600">School</span></h1>
+            <h1 class="text-2xl font-extrabold text-gray-800 leading-tight cursor-pointer" @click="router.push('/')">
+                Avto<span class="text-blue-600">School</span>
+            </h1>
             <div class="flex items-center gap-4">
                 <!-- Language selector -->
                 <el-select v-model="lang" @change="setLocale(locale)" class="!w-20">
@@ -42,7 +44,7 @@
                 </div>
                 <button
                     v-else
-                    class="bg-[#2563EB] hover:bg-[#1E50C4] text-white px-4 py-2 rounded-md text-sm font-medium transition"
+                    class="bg-[#2563EB] hover:bg-[#1E50C4] text-white px-4 py-2 rounded-md text-sm font-bold transition"
                     @click="router.push('/login')"
                 >
                     {{ t('app.login') }}
@@ -57,9 +59,6 @@
                 </transition>
             </router-view>
         </main>
-
-        <!-- Footer -->
-        <!-- <footer class="text-center text-sm text-gray-400 py-4 border-t border-gray-100">© 2025 MyApp. All rights reserved.</footer> -->
     </div>
 </template>
 

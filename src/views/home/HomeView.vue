@@ -66,13 +66,12 @@
 
             <div v-else class="flex flex-col items-center justify-center text-center py-20 px-5">
                 <h1 class="text-[62px] font-extrabold text-gray-800 mb-6 leading-tight">
-                    Avto<span class="text-blue-600">School</span> — Sizning yo‘ldagi <br />
-                    hamrohingiz
+                    Avto<span class="text-blue-600">School</span> — {{ $t('landing.subtitle_line1') }} <br />
+                    {{ $t('landing.subtitle_line2') }}
                 </h1>
 
                 <p class="text-gray-600 max-w-2xl text-lg mb-10">
-                    Haydovchilik guvohnomasiga tayyorlanish uchun mukammal joy: yo‘l harakati qoidalarini o‘rganing, interaktiv testlarni yeching va
-                    haqiqiy imtihon oldidan o‘zingizni sinab ko‘ring.
+                    {{ $t('landing.description') }}
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-14">
@@ -80,10 +79,10 @@
                         type="primary"
                         size="large"
                         round
-                        class="!bg-blue-600 !text-white font-semibold hover:!bg-blue-700 transition-all"
+                        class="!bg-blue-600 !text-white font-bold hover:!bg-blue-700 transition-all"
                         @click="$router.push('/login')"
                     >
-                        Tizimga kirish
+                        {{ $t('landing.login_button') }}
                     </el-button>
                 </div>
             </div>
