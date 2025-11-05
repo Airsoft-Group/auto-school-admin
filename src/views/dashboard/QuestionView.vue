@@ -43,6 +43,11 @@
                     {{ row.ticket?.name || '-' }}
                 </template>
             </el-table-column>
+            <el-table-column label="Answers" width="160" align="center">
+                <template #default="{ row }">
+                    <el-button size="small" type="success" plain @click="openAnswer(row)">View answer </el-button>
+                </template>
+            </el-table-column>
             <el-table-column label="Actions" width="200" align="center">
                 <template #default="{ row }">
                     <div class="flex items-center justify-center gap-2">
@@ -199,6 +204,7 @@ import { debounce } from 'lodash'
 import { useSubjectStore } from '@/stores/subjects'
 import { useTicketStore } from '@/stores/ticket'
 import AppUpload from '@/components/common/fileUpload.vue'
+import { useRouter } from 'vue-router'
 
 export interface IFile {
     id: string
@@ -220,6 +226,7 @@ const loading = ref(false)
 const viewVisible = ref(false)
 const isModalOpen = ref(false)
 const isEditing = ref(false)
+const router = useRouter()
 const editingId = ref<string | null>(null)
 const filters = reactive({
     page: 1,
@@ -281,6 +288,13 @@ const openView = async (row: any) => {
     viewVisible.value = true
     await questionStore.viewQuestion(row.id)
 }
+function openAnswer(row: any) {
+    if (!row?.id) return
+    router.push({
+        name: 'answer',
+        params: { id: row.id },
+    })
+}
 
 function openCreateModal() {
     isEditing.value = false
@@ -289,8 +303,6 @@ function openCreateModal() {
 }
 
 function openEditModal(data: any) {
-    console.log(data, 'data')
-
     isEditing.value = true
     editingId.value = data.id
     Object.assign(ruleForm, {

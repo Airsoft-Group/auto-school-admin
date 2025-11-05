@@ -61,6 +61,12 @@ const router = createRouter({
                     meta: { requiresAuth: true, roles: ['super_admin'] },
                 },
                 {
+                    path: 'question/:id',
+                    name: 'answer',
+                    component: () => import('../views/dashboard/AnswerView.vue'),
+                    meta: { requiresAuth: true, roles: ['super_admin'] },
+                },
+                {
                     path: 'subject',
                     name: 'subject',
                     component: () => import('../views/dashboard/SubjectView.vue'),
