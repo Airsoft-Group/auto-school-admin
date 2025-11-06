@@ -4,7 +4,7 @@ import request from '@/services/api'
 import { ApiResponse } from '@/types'
 
 export interface Subjects {
-    id: string
+    id?: string
     name: {
         oz: string
         uz: string
@@ -21,12 +21,7 @@ export const useSubjectStore = defineStore('subject', {
         subject: {
             data: [],
             meta: {
-                pagination: {
-                    total: 0,
-                    page: 1,
-                    limit: 10,
-                    lastPage: 1,
-                },
+                pagination: {} as any,
             },
         },
     }),
@@ -47,5 +42,12 @@ export const useSubjectStore = defineStore('subject', {
         async deleteSubject(id: string) {
             return request.delete(`/v1/subjects/${id}`)
         },
+    },
+    getters: {
+        getSubjectSelect: (state): any[] =>
+            state.subject?.data?.map((subject) => ({
+                value: subject.id,
+                label: subject.name?.uz,
+            })),
     },
 })

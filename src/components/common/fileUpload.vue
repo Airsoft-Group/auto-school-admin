@@ -18,8 +18,8 @@
         </template>
     </el-upload>
 </template>
-  
-  <script setup lang="ts">
+
+<script setup lang="ts">
 import { useFileStore } from '@/stores'
 import { Plus } from '@element-plus/icons-vue'
 import { ElMessage, type UploadFile, type UploadInstance, type UploadUserFile } from 'element-plus'
@@ -31,7 +31,7 @@ export interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    accept: '.xlsx, .xls',
+    accept: '.jpeg, .png, .jpg, .svg',
     reset: false,
 })
 
@@ -74,5 +74,5 @@ watch(
     }
 )
 </script>
-  
-  <style scoped></style>
+
+<style scoped></style>

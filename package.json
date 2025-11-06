@@ -1,5 +1,5 @@
 {
-    "name": "ayol-edu-admin-ui",
+    "name": "Auto test",
     "version": "0.0.1",
     "scripts": {
         "dev": "vite --force",
