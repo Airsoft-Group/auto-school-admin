@@ -15,7 +15,7 @@
             </div>
             <el-button type="primary" @click="openCreateModal">+ Add Answer</el-button>
         </div>
-        <h4 class="text-xl font-semibold text-gray-800 mb-4">{{ answerDetail[0]?.question?.subject?.name?.oz }}</h4>
+        <h4 v-if="answerDetail?.length" class="text-xl font-semibold text-gray-800 mb-4">{{ answerDetail[0]?.question?.subject?.name?.oz }}</h4>
         <div v-if="answerDetail?.length">
             <el-table style="width: 100%" class="whiteStripe" v-loading="loading" :data="answerDetail">
                 <el-table-column type="index" label="#" width="50" />
