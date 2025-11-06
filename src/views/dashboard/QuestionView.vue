@@ -156,7 +156,7 @@
                             class="absolute right-3 top-[-35px] flex items-center justify-center"
                             title="Translate"
                         >
-                            Translate
+                            Translate 🌐
                         </button>
                     </el-form-item>
 

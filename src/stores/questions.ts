@@ -84,7 +84,7 @@ export const useQuestionStore = defineStore('question', {
             this.answerDetail = response
         },
         async createAnswer(data: any) {
-            return request.post('/v1/answers', data)
+            return request.post('/v1/answers/multiple', data)
         },
         async updateAnswer(id: string, payload: any) {
             return request.put(`/v1/answers/${id}`, payload)

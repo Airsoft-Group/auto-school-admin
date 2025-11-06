@@ -74,7 +74,7 @@ const fetchPage = async (page: number) => {
     loading.value = false
 }
 
-const openSubject = async (id: string) => {
+const openSubject = async (id: any) => {
     await questionStore.fetchQuestionSubjectById(id)
     router.push(`/topics/${id}`)
 }
