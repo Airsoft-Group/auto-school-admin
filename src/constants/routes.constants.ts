@@ -37,13 +37,13 @@ export const menuItems: MenuItem[] = [
         path: 'question',
         role: ['super_admin', 'admin'],
     },
-    {
-        id: 5,
-        title: 'Exams',
-        icon: 'exams',
-        path: 'exam',
-        role: ['super_admin', 'admin'],
-    },
+    // {
+    //     id: 5,
+    //     title: 'Exams',
+    //     icon: 'exams',
+    //     path: 'exam',
+    //     role: ['super_admin', 'admin'],
+    // },
     // {
     //     id: 4,
     //     title: 'Kurslar',

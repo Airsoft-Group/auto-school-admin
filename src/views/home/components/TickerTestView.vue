@@ -60,25 +60,23 @@
                 <el-tag :type="getTimerType()" size="large" class="text-sm !text-[#fff]"> ⏱ {{ formatTime(timeLeft) }} </el-tag>
             </div>
 
-            <div class="grid gap-6" :class="currentQuestion?.file?.path ? 'md:grid-cols-2' : 'grid-cols-1'">
-                <div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm border mb-4">
-                        <p class="text-gray-800 font-medium text-lg mb-4">
-                            {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
-                        </p>
-                        <div class="space-y-3">
-                            <div
-                                v-for="(option, i) in currentQuestion?.answers || []"
-                                :key="option.id"
-                                class="flex items-center gap-3 border rounded-lg px-4 py-3 transition-all"
-                                :class="answerClass(option.id)"
-                                @click="selectAnswer(option.id)"
-                            >
-                                <span class="font-semibold text-blue-600 min-w-[40px]"> F{{ i + 1 }}. </span>
-                                <span class="text-gray-800">
-                                    {{ option.title?.[lang] }}
-                                </span>
-                            </div>
+            <div class="grid gap-6" :class="currentQuestion?.file?.path ? 'grid-cols-[40%_60%]' : 'grid-cols-1'">
+                <div class="bg-white p-5 rounded-lg shadow-sm border mb-4">
+                    <p class="text-gray-800 font-medium text-lg mb-4">
+                        {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
+                    </p>
+                    <div class="space-y-3">
+                        <div
+                            v-for="(option, i) in currentQuestion?.answers || []"
+                            :key="option.id"
+                            class="flex items-center gap-3 border rounded-lg px-4 py-3 transition-all"
+                            :class="answerClass(option.id)"
+                            @click="selectAnswer(option.id)"
+                        >
+                            <span class="font-semibold text-blue-600 min-w-[40px]"> F{{ i + 1 }}. </span>
+                            <span class="text-gray-800">
+                                {{ option.title?.[lang] }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -235,7 +233,7 @@ const getPaginationButtonClass = (index: number): string => {
         case 'skipped':
             baseClass = 'bg-gray-300 text-gray-700 border-gray-400'
             break
-        default: // unanswered
+        default:
             baseClass = 'bg-white text-gray-700 border-gray-300 hover:border-blue-400 hover:bg-blue-50'
     }
 
