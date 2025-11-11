@@ -57,7 +57,7 @@
                 <el-tag :type="getTimerType()" size="large" class="text-sm !text-[#fff]"> ⏱ {{ formatTime(timeLeft) }} </el-tag>
             </div>
 
-            <div class="grid gap-6" :class="currentQuestion?.file?.path ? 'md:grid-cols-2' : 'grid-cols-1'">
+            <div class="grid gap-6 md:grid-cols-[40%_60%] grid-cols-1">
                 <div>
                     <div class="bg-white p-5 rounded-lg shadow-sm border mb-4">
                         <p class="text-gray-800 font-medium text-lg mb-4">
@@ -79,16 +79,14 @@
                         </div>
                     </div>
                 </div>
-                <div
-                    :class="currentQuestion?.file?.path ? 'shadow-sm border' : 'shadow-none border-none'"
-                    class="p-5 rounded-lg mb-4 flex items-center justify-center overflow-hidden"
-                >
+                <div class="p-5 rounded-lg shadow-sm border mb-4 flex items-center justify-center overflow-hidden">
                     <img
                         v-if="currentQuestion?.file?.path"
                         :src="getImageUrl(currentQuestion.file.path)"
                         :alt="currentQuestion.file.name || 'Question Image'"
                         class="w-full h-full object-contain rounded-lg"
                     />
+                    <img v-else :src="DefaultImage" alt="" />
                 </div>
             </div>
             <div class="flex flex-col justify-center">
@@ -133,7 +131,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useQuestionStore } from '@/stores/questions'
 import { useExam } from '@/composables/useTest'
 import { useI18n } from 'vue-i18n'
-
+import DefaultImage from '@/assets/images/default-image.svg'
 const route = useRoute()
 const questionStore = useQuestionStore()
 const { t, locale } = useI18n()
@@ -162,9 +160,11 @@ const subjectTitle = computed(() => {
 const selectAnswer = (answerId: string) => {
     exam.value?.selectAnswer(answerId)
 
-    setTimeout(() => {
-        nextQuestion()
-    }, 2000)
+    if (currentIndex.value < totalQuestions.value - 1) {
+        setTimeout(() => {
+            nextQuestion()
+        }, 2000)
+    }
 }
 
 const nextQuestion = () => {
@@ -305,6 +305,7 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeyPress)
+    exam.value?.cleanup()
 })
 </script>
 
