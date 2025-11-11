@@ -60,7 +60,7 @@
                 <el-tag :type="getTimerType()" size="large" class="text-sm !text-[#fff]"> ⏱ {{ formatTime(timeLeft) }} </el-tag>
             </div>
 
-            <div class="grid gap-6" :class="currentQuestion?.file?.path ? 'grid-cols-[40%_60%]' : 'grid-cols-1'">
+            <div class="grid gap-6 md:grid-cols-[40%_60%] grid-cols-1">
                 <div class="bg-white p-5 rounded-lg shadow-sm border mb-4">
                     <p class="text-gray-800 font-medium text-lg mb-4">
                         {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
@@ -80,13 +80,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex items-start justify-center">
+                <div class="p-5 rounded-lg shadow-sm border mb-4 flex items-center justify-center overflow-hidden">
                     <img
                         v-if="currentQuestion?.file?.path"
                         :src="getImageUrl(currentQuestion.file.path)"
                         :alt="currentQuestion.file.name || 'Question Image'"
-                        class="max-h-[400px] w-full !rounded-lg object-contain"
+                        class="w-full h-full object-contain rounded-lg"
                     />
+                    <img v-else :src="DefaultImage" alt="" />
                 </div>
             </div>
             <div class="flex flex-col justify-center">
@@ -125,7 +126,8 @@
 <script setup lang="ts">
 import { useExam } from '@/composables'
 import { useQuestionStore } from '@/stores/questions'
-import { computed, onMounted, ref } from 'vue'
+import DefaultImage from '@/assets/images/default-image.svg'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 const questionStore = useQuestionStore()
@@ -154,9 +156,17 @@ const subjectTitle = computed(() => {
 
 const selectAnswer = (answerId: string) => {
     ticket.value?.selectAnswer(answerId)
-}
 
+    if (currentIndex.value < totalQuestions.value - 1) {
+        setTimeout(() => {
+            nextQuestion()
+        }, 2000)
+    }
+}
 const nextQuestion = () => {
+    if (currentIndex.value >= totalQuestions.value - 1) {
+        return
+    }
     ticket.value?.nextQuestion()
 }
 
@@ -244,7 +254,38 @@ const getPaginationButtonClass = (index: number): string => {
     return baseClass
 }
 
+const handleKeyPress = (event: KeyboardEvent) => {
+    const fKeyMap: Record<string, number> = {
+        F1: 0,
+        F2: 1,
+        F3: 2,
+        F4: 3,
+        F5: 4,
+    }
+
+    if (event.key in fKeyMap) {
+        event.preventDefault()
+
+        const index = fKeyMap[event.key]
+        const answers = currentQuestion.value?.answers || []
+
+        if (answers[index]) {
+            selectAnswer(answers[index].id)
+        }
+    }
+
+    if (event.key >= '1' && event.key <= '5') {
+        const index = parseInt(event.key) - 1
+        const answers = currentQuestion.value?.answers || []
+
+        if (answers[index]) {
+            selectAnswer(answers[index].id)
+        }
+    }
+}
+
 onMounted(async () => {
+    window.addEventListener('keydown', handleKeyPress)
     try {
         const id = route.params.id as string
         await questionStore.fetchQuestionTicketById(id)
@@ -258,6 +299,10 @@ onMounted(async () => {
     } finally {
         loading.value = false
     }
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyPress)
+    ticket.value?.cleanup()
 })
 </script>
 <style scoped>

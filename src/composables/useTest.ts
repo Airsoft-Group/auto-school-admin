@@ -1,4 +1,4 @@
-import { ref, computed, onUnmounted, watch } from 'vue'
+import { ref, computed, onUnmounted, watch, nextTick } from 'vue'
 
 export interface Answer {
     id: string
@@ -57,6 +57,12 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
 
             const state: ExamState = JSON.parse(saved)
 
+            // Agar test tugagan bo'lsa, localStorage'ni tozalash va null qaytarish
+            if (state.finished) {
+                localStorage.removeItem(STORAGE_KEY)
+                return null
+            }
+
             // Savollar o'zgarganini tekshirish
             const currentQuestionIds = questions.value.map((q) => q.id)
             const savedQuestionIds = state.questionIds || []
@@ -93,6 +99,12 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
 
     // State'ni saqlash
     const saveState = () => {
+        // Agar test tugagan bo'lsa, localStorage'ga saqlamaslik
+        if (finished.value) {
+            localStorage.removeItem(STORAGE_KEY)
+            return
+        }
+
         try {
             const state: ExamState = {
                 currentIndex: currentIndex.value,
@@ -157,10 +169,22 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         }, 1000)
     }
 
-    function selectAnswer(answerId: string) {
-        if (isCurrentQuestionAnswered.value) return
+    // function selectAnswer(answerId: string) {
+    //     if (isCurrentQuestionAnswered.value) return
 
+    //     selectedAnswer.value = answerId
+    // }
+    function selectAnswer(answerId: string) {
+        if (!currentQuestion.value) return
+
+        const answer = currentQuestion.value.answers.find((a) => a.id === answerId)
         selectedAnswer.value = answerId
+
+        userAnswers.value.set(currentIndex.value, {
+            questionId: currentQuestion.value.id,
+            answerId,
+            isCorrect: answer ? answer.isCorrect : null,
+        })
     }
 
     function nextQuestion() {
@@ -177,8 +201,6 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
 
         if (currentIndex.value < questions.value.length - 1) {
             currentIndex.value++
-        } else {
-            currentIndex.value = 0
         }
 
         currentPage.value = currentIndex.value + 1
@@ -192,6 +214,10 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         finished.value = true
         // Test tugaganda localStorage'ni darhol tozalash
         localStorage.removeItem(STORAGE_KEY)
+        // Watch trigger bo'lishini oldini olish uchun
+        nextTick(() => {
+            localStorage.removeItem(STORAGE_KEY)
+        })
     }
 
     function restart() {
@@ -218,12 +244,21 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         }
     }
 
+    // Cleanup function - component unmount bo'lganda chaqirish uchun
+    function cleanup() {
+        if (timer) clearInterval(timer)
+        // Agar test tugagan bo'lsa, localStorage'ni tozalash
+        if (finished.value) {
+            localStorage.removeItem(STORAGE_KEY)
+        }
+    }
+
     watch(currentIndex, (newIndex) => {
         currentPage.value = newIndex + 1
     })
 
     onUnmounted(() => {
-        if (timer) clearInterval(timer)
+        cleanup()
     })
 
     startTimer()
@@ -246,6 +281,7 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         restart,
         jumpToQuestion,
         finishExam,
+        cleanup,
         examType: examTypeRef,
     }
 }
