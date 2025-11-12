@@ -23,11 +23,11 @@
                 class="mb-4 cursor-pointer hover:shadow-md transition-all duration-200"
                 v-for="(subject, index) in subjects"
                 :key="subject.id"
-                @click="openSubject(subject.id, subject.name?.uz)"
+                @click="openSubject(subject.id, subject.name?.[lang])"
             >
                 <div class="flex items-center gap-2">
                     <span class="text-gray-500 font-medium text-right"> {{ (currentPage - 1) * meta.pagination.limit + index + 1 }} ) </span>
-                    <h3 class="text-lg font-semibold text-gray-800 capitalize">{{ subject.name?.uz }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 capitalize">{{ subject.name?.[lang] }}</h3>
                 </div>
             </el-card>
 
@@ -52,11 +52,15 @@ import { useRouter } from 'vue-router'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useQuestionStore } from '@/stores/questions'
 import { useExamStore } from '@/stores'
+import { useI18n } from 'vue-i18n'
 const examStore = useExamStore()
 const subjectStore = useSubjectStore()
 const questionStore = useQuestionStore()
 const router = useRouter()
-
+const { t, locale } = useI18n()
+const lang = computed<'uz' | 'oz' | 'ru'>(() => {
+    return locale.value as 'uz' | 'oz' | 'ru'
+})
 const loading = ref(true)
 const currentPage = ref(1)
 
@@ -68,9 +72,9 @@ const meta = computed(
         }
 )
 
-const fetchPage = async (page: number) => {
+const fetchPage = async (page: any) => {
     loading.value = true
-    await subjectStore.fetchSubjects({ page })
+    await subjectStore.fetchSubjects({ page } as any)
     currentPage.value = page
     loading.value = false
 }

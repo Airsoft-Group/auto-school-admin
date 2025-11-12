@@ -73,7 +73,7 @@ const ruleForm = reactive({
 const pagination = reactive({
     total: 0,
     page: 1,
-    limit: 10,
+    limit: 20,
     lastPage: 1,
 })
 
@@ -91,7 +91,7 @@ onMounted(() => {
 const fetchList = async () => {
     try {
         loading.value = true
-        await ticketStore.fetchTickets({ page: pagination.page, limit: pagination.limit })
+        await ticketStore.fetchTickets({ page: pagination.page, limit: pagination.limit } as any)
         const meta = tickets.value?.meta?.pagination as any
         if (meta) {
             pagination.total = meta.total

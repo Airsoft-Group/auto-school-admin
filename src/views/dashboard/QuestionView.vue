@@ -399,10 +399,10 @@ onMounted(() => {
     fetchQuestions()
 
     if (!ticketStore.getTicketSelect.length) {
-        ticketStore.fetchTickets({ page: 1, limit: 100 })
+        ticketStore.fetchTickets({ page: 1, limit: 100 } as any)
     }
     if (!subjectStore.getSubjectSelect.length) {
-        subjectStore.fetchSubjects({ page: 1, limit: 100 })
+        subjectStore.fetchSubjects({ page: 1, limit: 100 } as any)
     }
 })
 </script>

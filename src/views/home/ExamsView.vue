@@ -73,9 +73,9 @@
                         v-if="currentQuestion?.file?.path"
                         :src="getImageUrl(currentQuestion.file.path)"
                         :alt="currentQuestion.file.name || 'Question Image'"
-                        class="max-w-full max-h-[400px] object-contain rounded-lg mx-auto"
+                        class="w-full h-full object-contain rounded-lg mx-auto"
                     />
-                    <img v-else :src="DefaultImage" class="max-w-full max-h-[400px] rounded-lg object-contain mx-auto" alt="Default" />
+                    <img v-else :src="DefaultImage" class="w-full h-full rounded-lg object-contain mx-auto" alt="Default" />
                 </div>
             </div>
             <div v-if="!loading" class="flex flex-col justify-center mt-6">
