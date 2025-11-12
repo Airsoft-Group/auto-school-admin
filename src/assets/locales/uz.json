@@ -9,7 +9,20 @@
         "exam": "Imtihon topshirish",
         "ticket_list": "Biletlar ro‘yxati",
         "topic_list": "Mavzular ro‘yxati",
-        "back": "Orqaga"
+        "back": "Orqaga",
+        "home": "Asosiy sahifa",
+        "today": "Bugun",
+        "days": "kun",
+        "morning": "Ertalabki mashg‘ulot uchun ajoyib vaqt ☀️",
+        "afternoon": "Kunning o‘rtasida mashq qilish foydali 🔋",
+        "evening": "Kechqurun ham o‘rganishni davom ettiring 🌙",
+        "readyToStudyToday": "Bugun o‘qishni davom ettirishga tayyormisiz?",
+        "hello": "Salom"
+    },
+    "stats": {
+        "completed_tests": "Ishlangan testlar",
+        "highest_result": "Eng yuqori natija",
+        "last_test": "So‘nggi test"
     },
     "dashboard": {
         "hello": "Salom, {name}! 👋",
@@ -54,7 +67,8 @@
         "restart": "Qayta boshlash",
         "finish_exam": "Testni yakunlash",
         "great_job": "Ajoyib ish, shunday davom eting!",
-        "correct_answers": "To‘g‘ri javoblar"
+        "correct_answers": "To‘g‘ri javoblar",
+        "result_submitted_successfully": "Natija muvaffaqiyatli yuborildi"
     },
     "landing": {
         "subtitle_line1": "Sizning yo‘ldagi",
@@ -71,7 +85,8 @@
         "password_placeholder": "Parolingizni kiriting",
         "login_button": "Kirish",
         "back_to_home": "Asosiy sahifaga qaytish",
-        "or_text": "yoki"
+        "or_text": "yoki",
+        "home": "Asosiy sahifa"
     },
     "validation": {
         "email_required": "Iltimos, loginni kiriting",

@@ -25,10 +25,9 @@
                 :key="ticket.id"
                 shadow="hover"
                 class="cursor-pointer hover:shadow-md hover:border-blue-600 transition-all !rounded-lg duration-200 flex flex-col items-center justify-center py-6"
-                @click="openTicket(ticket.id as any)"
+                @click="openTicket(ticket.id as any, ticket.name)"
             >
                 <div class="text-xl font-bold text-blue-600">{{ ticket.name }}</div>
-                <!-- <p class="text-sm text-gray-500 mt-2">Savollar soni: {{ ticket.question_count }}</p> -->
             </el-card>
         </div>
 
@@ -51,7 +50,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useTicketStore } from '@/stores/ticket'
-
+import { useExamStore } from '@/stores'
+const examStore = useExamStore()
 const router = useRouter()
 const ticketStore = useTicketStore()
 
@@ -72,8 +72,12 @@ const fetchPage = async (page: number) => {
     loading.value = false
 }
 
-const openTicket = (id: number) => {
-    router.push(`/tickets/${id}`)
+const openTicket = async (id: number, name: string) => {
+    await examStore.fetchExamStart({ type: 'TICKET', ticketId: id })
+    router.push({
+        path: `/tickets/${id}`,
+        query: { name },
+    })
 }
 
 onMounted(() => {

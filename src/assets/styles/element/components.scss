@@ -5,7 +5,7 @@
 // Button styling
 .el-button {
     font-family: 'Inter', sans-serif;
-    font-weight: 500;
+    font-weight: 700;
     border-radius: 8px;
     height: 40px;
     padding: 8px 16px;
@@ -249,7 +249,7 @@
     font-family: 'Inter';
 
     &--large {
-        font-weight: 500;
+        font-weight: 700 !important;
         font-size: 14px !important;
         line-height:
             17.01px !important;
@@ -260,7 +260,7 @@
         background-color: #E7EAF1 !important;
         border: none !important;
         color: #9DA6B6 !important;
-        font-weight: 600;
+        font-weight: 700;
     }
 
 }
@@ -391,7 +391,7 @@
         border-radius: 8px !important;
         font-family: Inter;
         font-size: 14px !important;
-        font-weight: 600;
+        font-weight: 700;
         line-height: 20px;
         color: #475467;
     }

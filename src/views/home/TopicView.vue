@@ -23,7 +23,7 @@
                 class="mb-4 cursor-pointer hover:shadow-md transition-all duration-200"
                 v-for="(subject, index) in subjects"
                 :key="subject.id"
-                @click="openSubject(subject.id)"
+                @click="openSubject(subject.id, subject.name?.uz)"
             >
                 <div class="flex items-center gap-2">
                     <span class="text-gray-500 font-medium text-right"> {{ (currentPage - 1) * meta.pagination.limit + index + 1 }} ) </span>
@@ -51,7 +51,8 @@ import { useSubjectStore } from '@/stores/subjects'
 import { useRouter } from 'vue-router'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useQuestionStore } from '@/stores/questions'
-
+import { useExamStore } from '@/stores'
+const examStore = useExamStore()
 const subjectStore = useSubjectStore()
 const questionStore = useQuestionStore()
 const router = useRouter()
@@ -74,9 +75,13 @@ const fetchPage = async (page: number) => {
     loading.value = false
 }
 
-const openSubject = async (id: any) => {
+const openSubject = async (id: any, name: string) => {
     await questionStore.fetchQuestionSubjectById(id)
-    router.push(`/topics/${id}`)
+    await examStore.fetchExamStart({ type: 'SUBJECT', subjectId: id })
+    router.push({
+        path: `/topics/${id}`,
+        query: { name },
+    })
 }
 
 onMounted(async () => {

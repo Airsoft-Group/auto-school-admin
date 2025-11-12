@@ -36,6 +36,12 @@ const router = createRouter({
                     name: 'TicketTests',
                     component: () => import('@/views/home/components/TickerTestView.vue'),
                 },
+                {
+                    path: 'exams',
+                    name: 'exams',
+                    component: () => import('../views/home/ExamsView.vue'),
+                    meta: { isPublic: true },
+                },
             ],
         },
         {

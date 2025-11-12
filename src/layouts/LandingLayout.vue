@@ -33,10 +33,10 @@
                     </div>
                     <transition name="fade">
                         <div v-if="menuOpen" class="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-10 flex flex-col">
-                            <button class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100" @click="router.push('/profile')">
+                            <!-- <button class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100" @click="router.push('/profile')">
                                 {{ t('app.profile') }}
-                            </button>
-                            <button class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" @click="logout">
+                            </button> -->
+                            <button class="w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-gray-100" @click="logout">
                                 {{ t('app.logout') }}
                             </button>
                         </div>
@@ -63,13 +63,14 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/stores'
+import { useExamStore, useUserStore } from '@/stores'
 import { setLocale } from '@/utils/i18n'
 import { ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 const userStore = useUserStore()
+const examStore = useExamStore()
 const user = computed(() => userStore.user)
 const router = useRouter()
 const menuOpen = ref(false)
@@ -79,6 +80,7 @@ const lang = ref(localStorage.getItem('lang') || 'uz')
 onMounted(() => {
     if (userStore.token) {
         userStore.fetchUserInfo()
+        examStore.fetchResult()
     }
 })
 watch(lang, async (newLang) => {
@@ -93,7 +95,7 @@ const logout = async () => {
     })
         .then(async () => {
             await userStore.logout()
-            router.push('/')
+            router.push('/login')
         })
         .catch(() => {})
 }
