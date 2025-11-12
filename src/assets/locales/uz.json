@@ -12,7 +12,12 @@
         "back": "Orqaga",
         "home": "Asosiy sahifa",
         "today": "Bugun",
-        "days": "kun"
+        "days": "kun",
+        "morning": "Ertalabki mashg‘ulot uchun ajoyib vaqt ☀️",
+        "afternoon": "Kunning o‘rtasida mashq qilish foydali 🔋",
+        "evening": "Kechqurun ham o‘rganishni davom ettiring 🌙",
+        "readyToStudyToday": "Bugun o‘qishni davom ettirishga tayyormisiz?",
+        "hello": "Salom"
     },
     "stats": {
         "completed_tests": "Ishlangan testlar",

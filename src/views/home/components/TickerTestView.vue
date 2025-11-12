@@ -44,7 +44,7 @@
 
                 <!-- Buttons -->
                 <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
-                    <el-button type="primary" size="large" class="!px-8 !rounded-full" @click="restart"> {{ t('test.restart') }} </el-button>
+                    <el-button type="primary" size="large" class="!px-8 !rounded-full" @click="goToHome"> {{ t('app.home') }} </el-button>
                     <el-button type="success" size="large" class="!px-8 !rounded-full" @click="goToTopics"> {{ t('app.ticket_list') }} </el-button>
                 </div>
             </div>
@@ -179,9 +179,9 @@ const finishExam = async () => {
 const goToTopics = () => {
     router.push('/tickets')
 }
-
-const restart = () => {
-    ticket.value?.restart()
+const goToHome = () => {
+    router.push('/')
+    examStore.fetchResult()
 }
 
 const handlePageChange = (page: number) => {

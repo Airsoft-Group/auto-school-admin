@@ -11,8 +11,8 @@
             <div v-if="isLoggedIn" class="container mx-auto px-6 py-12">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10">
                     <div>
-                        <h2 class="text-4xl font-extrabold text-gray-800">👋 Salom, {{ user?.fullName || 'Haydovchi' }}</h2>
-                        <p class="text-gray-500 text-lg mt-1">Bugun o‘qishni davom ettirishga tayyormisiz?</p>
+                        <h2 class="text-4xl font-extrabold text-gray-800">👋 {{ t('app.hello') }}, {{ user?.fullName || 'Haydovchi' }}</h2>
+                        <p class="text-gray-500 text-lg mt-1">{{ t('app.readyToStudyToday') }}</p>
                     </div>
                     <div class="bg-blue-50 border border-blue-100 rounded-2xl px-6 py-3 text-blue-700 text-sm font-semibold shadow-sm">
                         🌤 {{ greetingMessage }}
@@ -117,9 +117,9 @@ const lang = computed(() => locale.value as any)
 
 const greetingMessage = computed(() => {
     const hour = new Date().getHours()
-    if (hour < 12) return 'Ertalabki mashg‘ulot uchun ajoyib vaqt ☀️'
-    if (hour < 18) return 'Kunning o‘rtasida mashq qilish foydali 🔋'
-    return 'Kechqurun ham o‘rganishni davom ettiring 🌙'
+    if (hour < 12) return t('app.morning')
+    if (hour < 18) return t('app.afternoon')
+    return t('app.evening')
 })
 const stats = computed(() => {
     if (!results.value) return []

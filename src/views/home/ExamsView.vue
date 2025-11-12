@@ -38,7 +38,6 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
-                    <el-button type="primary" size="large" class="!px-8 !rounded-full" @click="restart"> {{ t('test.restart') }} </el-button>
                     <el-button type="success" size="large" class="!px-8 !rounded-full" @click="goToTopics"> {{ t('app.home') }} </el-button>
                 </div>
             </div>
