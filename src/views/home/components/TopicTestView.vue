@@ -51,7 +51,7 @@
         <div v-else>
             <div class="flex justify-between items-center mb-4">
                 <div class="flex flex-col gap-2">
-                    <h1 class="text-xl font-bold capitalize">{{ subjectTitle || 'title' }}</h1>
+                    <h1 class="text-xl font-bold capitalize">{{ topicName || 'Mavzu nomi' }}</h1>
                     <h2 class="text-lg font-semibold">{{ t('test.question') }} {{ currentIndex + 1 }}/{{ totalQuestions }}</h2>
                 </div>
                 <el-tag :type="getTimerType()" size="large" class="text-sm !text-[#fff]"> ⏱ {{ formatTime(timeLeft) }} </el-tag>
@@ -132,7 +132,10 @@ import { useQuestionStore } from '@/stores/questions'
 import { useExam } from '@/composables/useTest'
 import { useI18n } from 'vue-i18n'
 import DefaultImage from '@/assets/images/default-image.svg'
+import { useExamStore } from '@/stores'
+import { ElMessage } from 'element-plus'
 const route = useRoute()
+const examStore = useExamStore()
 const questionStore = useQuestionStore()
 const { t, locale } = useI18n()
 
@@ -140,6 +143,7 @@ const lang = computed(() => locale.value as any)
 const loading = ref(true)
 const exam = ref<ReturnType<typeof useExam> | null>(null)
 const router = useRouter()
+const topicName = computed(() => route.query.name as string)
 // Computed properties
 const currentQuestion = computed(() => exam.value?.currentQuestion || null)
 const currentIndex = computed(() => exam.value?.currentIndex ?? 0)
@@ -151,20 +155,12 @@ const score = computed(() => exam.value?.score ?? 0)
 const totalQuestions = computed(() => exam.value?.totalQuestions ?? 0)
 const isCurrentQuestionAnswered = computed(() => exam.value?.isCurrentQuestionAnswered ?? false)
 
-const subjectTitle = computed(() => {
-    const subject = questionStore.questionSubjectId?.data[0]
-    return subject?.subject?.name?.[lang.value] || subject?.name || ''
-})
-
-// Methods
 const selectAnswer = (answerId: string) => {
+    if (isCurrentQuestionAnswered.value) return
     exam.value?.selectAnswer(answerId)
-
-    if (currentIndex.value < totalQuestions.value - 1) {
-        setTimeout(() => {
-            nextQuestion()
-        }, 2000)
-    }
+    setTimeout(() => {
+        exam.value?.nextQuestion()
+    }, 500)
 }
 
 const nextQuestion = () => {
@@ -174,8 +170,14 @@ const nextQuestion = () => {
     exam.value?.nextQuestion()
 }
 
-const finishExam = () => {
-    exam.value?.finishExam()
+const finishExam = async () => {
+    try {
+        await exam.value?.finishExam()
+        ElMessage.success(t('test.result_submitted_successfully'))
+    } catch (error) {
+        console.error('Natija yuborishda xatolik:', error)
+        ElMessage.error(t('test.result_submission_failed'))
+    }
 }
 const goToTopics = () => {
     router.push('/topics')
@@ -291,11 +293,12 @@ onMounted(async () => {
     window.addEventListener('keydown', handleKeyPress)
     try {
         const id = route.params.id as string
-        await questionStore.fetchQuestionSubjectById(id)
-
-        const questions = questionStore.questionSubjectId?.data
-        if (questions && questions.length > 0) {
-            exam.value = useExam(questions, 'topic')
+        await examStore.fetchExamStart({ type: 'SUBJECT', subjectId: id })
+        const sessionId = examStore.exams?.data?.id || examStore.exams?.data?.sessionId
+        const timeLimit = examStore.exams?.data?.timeLimit
+        const ExamQuestions = examStore.exams?.data?.questions
+        if (ExamQuestions && ExamQuestions.length > 0) {
+            exam.value = useExam(ExamQuestions, 'topic', undefined, sessionId, timeLimit)
         }
     } catch (error) {
         console.error('Error loading questions:', error)

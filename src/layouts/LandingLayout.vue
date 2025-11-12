@@ -63,13 +63,14 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/stores'
+import { useExamStore, useUserStore } from '@/stores'
 import { setLocale } from '@/utils/i18n'
 import { ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 const userStore = useUserStore()
+const examStore = useExamStore()
 const user = computed(() => userStore.user)
 const router = useRouter()
 const menuOpen = ref(false)
@@ -79,6 +80,7 @@ const lang = ref(localStorage.getItem('lang') || 'uz')
 onMounted(() => {
     if (userStore.token) {
         userStore.fetchUserInfo()
+        examStore.fetchResult()
     }
 })
 watch(lang, async (newLang) => {

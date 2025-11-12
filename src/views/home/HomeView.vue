@@ -19,46 +19,54 @@
                     </div>
                 </div>
 
-                <div class="grid sm:grid-cols-3 gap-6">
+                <div class="grid sm:grid-cols-3 gap-6" v-if="stats">
                     <el-card
                         v-for="(stat, i) in stats"
                         :key="i"
                         shadow="hover"
                         class="text-center border !rounded-2xl border-gray-100 hover:shadow-lg transition-all"
                     >
-                        <p class="text-gray-500 text-sm mb-1">{{ $t(stat.label) }}</p>
-                        <p :class="stat.colorClass" class="font-bold text-xl">{{ stat.value }}</p>
+                        <p class="text-gray-500 text-sm mb-1">
+                            {{ t('stats.completed_tests') }}
+                        </p>
+                        <p :class="stat.colorClass" class="font-bold text-xl">
+                            {{ stat.value }}
+                        </p>
                     </el-card>
                 </div>
                 <div class="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                     <div
                         v-for="(item, i) in cards"
                         :key="i"
-                        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-white border border-gray-100 hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2"
-                        @click="handleCardClick(item.route)"
+                        class="group relative bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-blue-500 transition-all duration-300 cursor-pointer"
+                        @click="handleCardClick(item.route, item)"
                     >
-                        <div
-                            class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-blue-200/30 to-indigo-100/30 blur-2xl"
-                        ></div>
+                        <div class="p-6 flex flex-col justify-between h-full">
+                            <component
+                                :is="item.icon"
+                                class="w-10 h-10 mb-2 text-blue-600 group-hover:text-blue-700 transition-colors duration-300"
+                            />
 
-                        <div class="relative z-10 flex flex-col justify-between h-full p-6">
-                            <div>
-                                <div class="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                                    {{ item.icon }}
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors duration-300">
+                                {{ $t(item.title) }}
+                            </h3>
+                            <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 flex-1">
+                                {{ $t(item.desc) }}
+                            </p>
+
+                            <div class="mt-6 flex items-center justify-between">
+                                <button class="text-sm font-semibold text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
+                                    {{ $t(item.btnText) }}
+                                </button>
+
+                                <div
+                                    class="w-8 h-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-full group-hover:bg-blue-600 group-hover:text-white transition-all duration-300"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
                                 </div>
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors duration-300">
-                                    {{ $t(item.title) }}
-                                </h3>
-                                <p class="text-gray-500 text-sm leading-relaxed">
-                                    {{ $t(item.desc) }}
-                                </p>
                             </div>
-
-                            <button
-                                class="mt-6 py-2 px-4 bg-blue-600 text-white rounded-full text-sm font-semibold hover:bg-blue-700 active:scale-95 transition-all duration-300"
-                            >
-                                {{ $t(item.btnText) }}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -93,51 +101,83 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores'
+import { useExamStore, useUserStore } from '@/stores'
 import { useI18n } from 'vue-i18n'
-
+import TopicsIcon from '@/components/icons/IconTopic.vue'
+import TicketsIcon from '@/components/icons/IconTicket.vue'
+import ExamIcon from '@/components/icons/IconExam.vue'
 const router = useRouter()
 const userStore = useUserStore()
+const examStore = useExamStore()
 const user = computed(() => userStore.user)
+const results = computed(() => examStore.result)
 const isLoggedIn = computed(() => !!userStore.token)
-const stats = [
-    { label: 'dashboard.stats.tests_done', value: '12', colorClass: 'text-blue-600' },
-    { label: 'dashboard.stats.best_score', value: '98%', colorClass: 'text-green-600' },
-    { label: 'dashboard.stats.last_test', value: '3 kun oldin', colorClass: 'text-yellow-600' },
-]
+const { t, locale } = useI18n()
+const lang = computed(() => locale.value as any)
+
 const greetingMessage = computed(() => {
     const hour = new Date().getHours()
     if (hour < 12) return 'Ertalabki mashg‘ulot uchun ajoyib vaqt ☀️'
     if (hour < 18) return 'Kunning o‘rtasida mashq qilish foydali 🔋'
     return 'Kechqurun ham o‘rganishni davom ettiring 🌙'
 })
+const stats = computed(() => {
+    if (!results.value) return []
+
+    return results.value.data?.statistics.map((stat: any) => {
+        let displayValue: string | number = stat.count
+
+        if (stat.type === 'percentage') {
+            displayValue = `${stat.count}%`
+        } else if (stat.type === 'days') {
+            displayValue = stat.count === 0 ? t('app.today') : `${stat.count} ${t('app.days')}`
+        }
+
+        return {
+            label: stat.label,
+            value: displayValue,
+            colorClass: stat.type === 'percentage' ? 'text-green-600' : 'text-gray-800',
+        }
+    })
+})
+
 const cards = [
     {
-        icon: '📘',
+        icon: TopicsIcon,
         title: 'dashboard.cards.topics.title',
         desc: 'dashboard.cards.topics.desc',
         btnText: 'dashboard.cards.topics.btn',
         route: '/topics',
     },
     {
-        icon: '🎟️',
+        icon: TicketsIcon,
         title: 'dashboard.cards.tickets.title',
         desc: 'dashboard.cards.tickets.desc',
         btnText: 'dashboard.cards.tickets.btn',
         route: '/tickets',
     },
     {
-        icon: '🧠',
+        icon: ExamIcon,
         title: 'dashboard.cards.exam.title',
         desc: 'dashboard.cards.exam.desc',
         btnText: 'dashboard.cards.exam.btn',
         route: '/exam',
+        isExam: true,
     },
 ]
 
-const handleCardClick = (route: string) => {
+async function handleCardClick(route: string, card?: any) {
     if (!userStore.token) {
         router.push('/login')
+    } else if (card?.isExam) {
+        try {
+            await examStore.fetchExamStart({ type: 'RANDOM' })
+            router.push({
+                name: 'exams',
+            })
+        } catch (error) {
+            console.error('Exam API error:', error)
+        }
     } else {
         router.push(route)
     }

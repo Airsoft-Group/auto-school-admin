@@ -27,10 +27,10 @@ export const useSubjectStore = defineStore('subject', {
     }),
 
     actions: {
-        async fetchSubjects(params?: { page?: number; limit?: number }) {
+        async fetchSubjects(params?: { page?: number; limit?: number; sortBy: 'createdAt'; order: 'asc' }) {
             const page = params?.page ?? this.subject.meta?.pagination?.page ?? 1
-            const limit = params?.limit ?? this.subject.meta?.pagination?.limit ?? 10
-            const res = await request.get(`/v1/subjects?page=${page}&limit=${limit}`)
+            const limit = params?.limit ?? this.subject.meta?.pagination?.limit ?? 20
+            const res = await request.get(`/v1/subjects?page=${page}&limit=${limit}&sortBy=createdAt&order=asc`)
             this.subject = res
         },
         async createSubject(payload: Subjects) {

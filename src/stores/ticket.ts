@@ -20,7 +20,7 @@ export const useTicketStore = defineStore('ticket', {
                 pagination: {
                     total: 0,
                     page: 1,
-                    limit: 10,
+                    limit: 20,
                     lastPage: 1,
                 },
             },
@@ -28,10 +28,10 @@ export const useTicketStore = defineStore('ticket', {
     }),
 
     actions: {
-        async fetchTickets(params?: { page?: number; limit?: number }) {
+        async fetchTickets(params?: { page?: number; limit?: number; sortBy: 'createdAt'; order: 'asc' }) {
             const page = params?.page ?? this.ticket.meta?.pagination?.page ?? 1
             const limit = params?.limit ?? this.ticket.meta?.pagination?.limit ?? 10
-            const res = await request.get(`/v1/tickets?page=${page}&limit=${limit}`)
+            const res = await request.get(`/v1/tickets?page=${page}&limit=${limit}&sortBy=createdAt&order=asc`)
             this.ticket = res
         },
         async createTicket(payload: Tickets) {

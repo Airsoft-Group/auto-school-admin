@@ -1,3 +1,4 @@
+import { useExamStore } from '@/stores'
 import { ref, computed, onUnmounted, watch, nextTick } from 'vue'
 
 export interface Answer {
@@ -22,7 +23,7 @@ export interface Subject {
     title?: { [key: string]: string }
 }
 
-export type ExamType = 'ticket' | 'topic'
+export type ExamType = 'ticket' | 'topic' | 'exam'
 
 export interface UserAnswer {
     questionId: string
@@ -42,14 +43,15 @@ interface ExamState {
     examType: ExamType
 }
 
-export function useExam(questionsData: Question[], examType: ExamType = 'ticket') {
-    // Bilet uchun 20 ta, mavzu uchun hammasi
+export function useExam(questionsData: Question[], examType: ExamType = 'ticket', examId?: string, sessionId?: string, timeLimitMinutes?: number) {
+    const examStore = useExamStore()
+
     const questionLimit = examType === 'ticket' ? 20 : questionsData.length
     const questions = ref<Question[]>(questionsData?.slice(0, questionLimit) || [])
     const examTypeRef = ref<ExamType>(examType)
+    const sessionIdRef = ref<string>(sessionId || '')
     const STORAGE_KEY = `exam_state_${examType}_${questions.value[0]?.id || 'default'}`
 
-    // LocalStorage'dan ma'lumotlarni yuklash
     const loadState = (): ExamState | null => {
         try {
             const saved = localStorage.getItem(STORAGE_KEY)
@@ -57,20 +59,17 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
 
             const state: ExamState = JSON.parse(saved)
 
-            // Agar test tugagan bo'lsa, localStorage'ni tozalash va null qaytarish
             if (state.finished) {
                 localStorage.removeItem(STORAGE_KEY)
                 return null
             }
 
-            // Savollar o'zgarganini tekshirish
             const currentQuestionIds = questions.value.map((q) => q.id)
             const savedQuestionIds = state.questionIds || []
 
             const isSameQuestions =
                 currentQuestionIds.length === savedQuestionIds.length && currentQuestionIds.every((id, index) => id === savedQuestionIds[index])
 
-            // Test turi o'zgarganini tekshirish
             const isSameExamType = state.examType === examType
 
             if (!isSameQuestions || !isSameExamType) {
@@ -85,21 +84,20 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
             return null
         }
     }
-
+    const totalSeconds = (timeLimitMinutes ?? 60) * 60
     const savedState = loadState()
 
     const currentIndex = ref(savedState?.currentIndex ?? 0)
     const currentPage = ref(savedState?.currentPage ?? 1)
     const selectedAnswer = ref<string | null>(savedState?.selectedAnswer ?? null)
-    const timeLeft = ref(savedState?.timeLeft ?? 3600)
+    const timeLeft = ref(savedState?.timeLeft ?? totalSeconds)
+    const initialTime = ref(totalSeconds)
     const finished = ref(savedState?.finished ?? false)
     const userAnswers = ref<Map<number, UserAnswer>>(savedState?.userAnswers ? new Map(savedState.userAnswers) : new Map())
 
     let timer: NodeJS.Timeout | null = null
 
-    // State'ni saqlash
     const saveState = () => {
-        // Agar test tugagan bo'lsa, localStorage'ga saqlamaslik
         if (finished.value) {
             localStorage.removeItem(STORAGE_KEY)
             return
@@ -123,7 +121,6 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         }
     }
 
-    // Barcha o'zgarishlarni kuzatish
     watch(
         [currentIndex, currentPage, selectedAnswer, timeLeft, finished, userAnswers],
         () => {
@@ -169,26 +166,12 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         }, 1000)
     }
 
-    // function selectAnswer(answerId: string) {
-    //     if (isCurrentQuestionAnswered.value) return
-
-    //     selectedAnswer.value = answerId
-    // }
     function selectAnswer(answerId: string) {
-        if (!currentQuestion.value) return
-
-        const answer = currentQuestion.value.answers.find((a) => a.id === answerId)
+        if (isCurrentQuestionAnswered.value) return
         selectedAnswer.value = answerId
-
-        userAnswers.value.set(currentIndex.value, {
-            questionId: currentQuestion.value.id,
-            answerId,
-            isCorrect: answer ? answer.isCorrect : null,
-        })
     }
 
     function nextQuestion() {
-        // Joriy javobni saqlash
         if (currentQuestion.value && selectedAnswer.value) {
             const answer = currentQuestion.value.answers.find((a) => a.id === selectedAnswer.value)
 
@@ -201,20 +184,70 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
 
         if (currentIndex.value < questions.value.length - 1) {
             currentIndex.value++
+            currentPage.value = currentIndex.value + 1
+
+            const nextAnswer = userAnswers.value.get(currentIndex.value)
+            selectedAnswer.value = nextAnswer?.answerId || null
         }
-
-        currentPage.value = currentIndex.value + 1
-
-        const nextAnswer = userAnswers.value.get(currentIndex.value)
-        selectedAnswer.value = nextAnswer?.answerId || null
     }
 
-    function finishExam() {
+    async function submitResult() {
+        try {
+            if (examTypeRef.value === 'exam' || examTypeRef.value === 'topic' || examTypeRef.value === 'ticket') {
+                const correctQuestionIds: string[] = []
+
+                userAnswers.value.forEach((answer) => {
+                    if (answer.isCorrect === true) {
+                        correctQuestionIds.push(answer.questionId)
+                    }
+                })
+
+                const payload = {
+                    correctQuestionIds: correctQuestionIds,
+                }
+                const response = await examStore.fetchExamResult(payload, sessionIdRef.value)
+                console.log('✅ Natija muvaffaqiyatli yuborildi:', response)
+                return response
+            } else {
+                const timeSpent = initialTime.value - timeLeft.value
+
+                const answersArray = Array.from(userAnswers.value.entries()).map(([index, answer]) => ({
+                    questionId: answer.questionId,
+                    answerId: answer.answerId,
+                    isCorrect: answer.isCorrect,
+                }))
+
+                const payload = {
+                    type: examTypeRef.value,
+                    id: examId || '',
+                    correctAnswers: score.value,
+                    totalQuestions: totalQuestions.value,
+                    score: Math.round((score.value / totalQuestions.value) * 100),
+                    timeSpent: timeSpent,
+                    answers: answersArray,
+                }
+
+                console.log(`📤 ${examTypeRef.value} natijasi yuborilmoqda:`, payload)
+                return payload
+            }
+        } catch (error) {
+            console.error('❌ Natija yuborishda xatolik:', error)
+            throw error
+        }
+    }
+
+    async function finishExam() {
         if (timer) clearInterval(timer)
         finished.value = true
-        // Test tugaganda localStorage'ni darhol tozalash
+
+        try {
+            await submitResult()
+        } catch (error) {
+            console.error('Natija yuborishda xatolik:', error)
+            throw error
+        }
+
         localStorage.removeItem(STORAGE_KEY)
-        // Watch trigger bo'lishini oldini olish uchun
         nextTick(() => {
             localStorage.removeItem(STORAGE_KEY)
         })
@@ -228,7 +261,6 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         timeLeft.value = 3600
         userAnswers.value.clear()
 
-        // LocalStorage'ni tozalash
         localStorage.removeItem(STORAGE_KEY)
 
         startTimer()
@@ -244,10 +276,8 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         }
     }
 
-    // Cleanup function - component unmount bo'lganda chaqirish uchun
     function cleanup() {
         if (timer) clearInterval(timer)
-        // Agar test tugagan bo'lsa, localStorage'ni tozalash
         if (finished.value) {
             localStorage.removeItem(STORAGE_KEY)
         }
@@ -281,6 +311,7 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         restart,
         jumpToQuestion,
         finishExam,
+        submitResult,
         cleanup,
         examType: examTypeRef,
     }
