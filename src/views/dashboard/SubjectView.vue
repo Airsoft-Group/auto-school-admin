@@ -48,9 +48,19 @@
         <!-- Create/Edit Modal -->
         <el-dialog :title="isEditing ? 'Edit Subject' : 'Add Subject'" v-model="isModalOpen" width="500px">
             <div>
-                <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-position="top" v-loading="loading">
-                    <el-form-item label="Name (O‘zbekcha)" prop="name.oz">
+                <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-position="top" v-loading="TransLoading">
+                    <el-form-item label="Name (O‘zbekcha)" prop="name.oz" class="relative">
                         <el-input v-model="ruleForm.name.oz" placeholder="Masalan: Matematika" />
+                        <button
+                            :disabled="!ruleForm.name.oz"
+                            type="button"
+                            @click="translateTitle"
+                            :class="ruleForm.name.oz ? 'text-[#326CFF] cursor-pointer' : 'text-gray-400 cursor-not-allowed'"
+                            class="absolute right-3 top-[-35px] flex items-center justify-center"
+                            title="Translate"
+                        >
+                            Translate 🌐
+                        </button>
                     </el-form-item>
 
                     <el-form-item label="Name (Кирил)" prop="name.uz">
@@ -73,13 +83,16 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { useQuestionStore } from '@/stores/questions'
 import { useSubjectStore } from '@/stores/subjects'
 import { DeleteFilled, EditPen } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus'
 import { computed, onMounted, reactive, ref } from 'vue'
-
+import { debounce } from 'lodash'
 const subjectStore = useSubjectStore()
 const subjects = computed(() => subjectStore.subject)
+const questionStore = useQuestionStore()
+const translateData = computed(() => questionStore.translate)
 const loading = ref(false)
 const isModalOpen = ref(false)
 const isEditing = ref(false)
@@ -95,7 +108,7 @@ const ruleForm = reactive({
 const pagination = reactive({
     total: 0,
     page: 1,
-    limit: 10,
+    limit: 20,
     lastPage: 1,
 })
 
@@ -108,6 +121,29 @@ const rules = reactive<FormRules>({
 const indexMethod = (index: number) => {
     return (pagination.page - 1) * pagination.limit + (index + 1)
 }
+const TransLoading = ref(false)
+const translateTitle = debounce(async () => {
+    const text = ruleForm.name.oz
+    if (!text) return
+
+    try {
+        TransLoading.value = true
+
+        const payload = {
+            text,
+            sourceLanguage: 'uz',
+        }
+        await questionStore.fetchTranslateText(payload)
+        ruleForm.name.oz = translateData?.value?.data?.translations?.oz
+        ruleForm.name.uz = translateData?.value?.data?.translations?.uz
+        ruleForm.name.ru = translateData?.value?.data?.translations?.ru
+    } catch (err) {
+        console.error(err)
+        ElMessage.error('Translation failed')
+    } finally {
+        TransLoading.value = false
+    }
+}, 500)
 onMounted(() => {
     fetchList()
 })
@@ -115,7 +151,7 @@ onMounted(() => {
 const fetchList = async () => {
     try {
         loading.value = true
-        await subjectStore.fetchSubjects({ page: pagination.page, limit: pagination.limit })
+        await subjectStore.fetchSubjects({ page: pagination.page, limit: pagination.limit } as any)
         const meta = subjects.value?.meta?.pagination as any
         if (meta) {
             pagination.total = meta.total
@@ -186,7 +222,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 
 function confirmDelete(subject: any) {
-    ElMessageBox.confirm(`Are you sure you want to delete "${subject.name}"?`, 'Warning', {
+    ElMessageBox.confirm(`Are you sure you want to delete "${subject.name?.oz}"?`, 'Warning', {
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
         type: 'warning',
