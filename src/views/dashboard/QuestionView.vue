@@ -108,7 +108,7 @@
             </div>
             <el-divider v-if="currentQuestion && currentQuestion.answers && currentQuestion.answers.length" />
             <div v-if="currentQuestion && currentQuestion.answers && currentQuestion.answers.length">
-                <h4 class="font-semibold text-gray-800 mb-2">Answers:</h4>
+                <h4 class="font-semibold text-gray-800 my-2">Answers:</h4>
                 <div
                     v-for="(ans, i) in currentQuestion?.answers"
                     :key="ans.id"
@@ -121,6 +121,14 @@
                     <p class="text-gray-800 text-sm leading-snug">🇺🇿 {{ ans.title.oz }}</p>
                     <p class="text-gray-800 text-sm leading-snug">🇺🇿 {{ ans.title.uz }}</p>
                     <p class="text-gray-800 text-sm leading-snug">🇷🇺 {{ ans.title.ru }}</p>
+                </div>
+            </div>
+            <div v-if="currentQuestion && currentQuestion.info">
+                <h4 class="font-semibold text-gray-800 my-2">Info:</h4>
+                <div>
+                    <p class="text-gray-800 text-sm leading-snug">🇺🇿 {{ currentQuestion.info.oz }}</p>
+                    <p class="text-gray-800 text-sm leading-snug">🇺🇿 {{ currentQuestion.info.uz }}</p>
+                    <p class="text-gray-800 text-sm leading-snug">🇷🇺 {{ currentQuestion.info.ru }}</p>
                 </div>
             </div>
         </el-dialog>
@@ -166,6 +174,27 @@
 
                     <el-form-item label="Question (Ruscha)" prop="title.ru">
                         <el-input type="textarea" v-model="ruleForm.title.ru" placeholder="Tarjima (Ruscha)" :rows="4" readonly />
+                    </el-form-item>
+                    <el-form-item label="Info (O‘zbekcha)" prop="info.oz" class="relative">
+                        <el-mention type="textarea" v-model="ruleForm.info.oz" placeholder="Tarjima (Uzbek)" />
+                        <button
+                            :disabled="!ruleForm.info.oz"
+                            type="button"
+                            @click="translateInfo"
+                            :class="ruleForm.info.oz ? 'text-[#326CFF] cursor-pointer' : 'text-gray-400 cursor-not-allowed'"
+                            class="absolute right-3 top-[-35px] flex items-center justify-center"
+                            title="Translate"
+                        >
+                            Translate 🌐
+                        </button>
+                    </el-form-item>
+
+                    <el-form-item label="Info (Кирил)" prop="info.uz">
+                        <el-mention type="textarea" v-model="ruleForm.info.uz" placeholder="Tarjima (Kirill)" />
+                    </el-form-item>
+
+                    <el-form-item label="Info (Русский)" prop="info.ru">
+                        <el-mention type="textarea" v-model="ruleForm.info.ru" placeholder="Tarjima (Ruscha)" />
                     </el-form-item>
                     <el-form-item prop="fileId" label="Attach document" class="w-full">
                         <AppUpload @upload="(file) => (ruleForm.fileId = file?.data?.id)" @remove="ruleForm.fileId = null">
@@ -244,6 +273,11 @@ const ruleForm = reactive({
         oz: '',
         ru: '',
     },
+    info: {
+        uz: '',
+        oz: '',
+        ru: '',
+    },
     fileId: null as any,
 })
 
@@ -265,6 +299,9 @@ const rules = reactive<FormRules>({
     'name.oz': [{ required: true, message: 'O‘zbekcha nom kiritish majburiy', trigger: 'blur' }],
     'name.uz': [{ required: true, message: 'Кириллча ном кiритиш мажбурий', trigger: 'blur' }],
     'name.ru': [{ required: true, message: 'Введите русское название', trigger: 'blur' }],
+    'info.oz': [{ required: true, message: 'O‘zbekcha nom kiritish majburiy', trigger: 'blur' }],
+    'info.uz': [{ required: true, message: 'Кириллча ном кiритиш мажбурий', trigger: 'blur' }],
+    'info.ru': [{ required: true, message: 'Введите русское название', trigger: 'blur' }],
 })
 const indexMethod = (index: number) => {
     return (filters.page - 1) * filters.limit + (index + 1)
@@ -288,6 +325,7 @@ const openView = async (row: any) => {
     viewVisible.value = true
     await questionStore.viewQuestion(row.id)
 }
+
 function openAnswer(row: any) {
     if (!row?.id) return
     router.push({
@@ -310,6 +348,11 @@ function openEditModal(data: any) {
             oz: data.title?.oz ?? '',
             uz: data.title?.uz ?? '',
             ru: data.title?.ru ?? '',
+        },
+        info: {
+            oz: data.info?.oz ?? '',
+            uz: data.info?.uz ?? '',
+            ru: data.info?.ru ?? '',
         },
         ticketId: data.ticket?.id ?? ruleForm.ticketId,
         subjectId: data.subject?.id ?? ruleForm.subjectId,
@@ -340,6 +383,9 @@ function resetForm() {
     ruleForm.title.oz = ''
     ruleForm.title.uz = ''
     ruleForm.title.ru = ''
+    ruleForm.info.oz = ''
+    ruleForm.info.uz = ''
+    ruleForm.info.ru = ''
     ;(ruleForm.fileId = null), (ruleForm.subjectId = ''), (ruleForm.ticketId = '')
 }
 
@@ -358,6 +404,29 @@ const translateTitle = debounce(async () => {
         ruleForm.title.oz = translateData?.value?.data?.translations?.oz
         ruleForm.title.uz = translateData?.value?.data?.translations?.uz
         ruleForm.title.ru = translateData?.value?.data?.translations?.ru
+    } catch (err) {
+        console.error(err)
+        ElMessage.error('Translation failed')
+    } finally {
+        loading.value = false
+    }
+}, 500)
+
+const translateInfo = debounce(async () => {
+    const text = ruleForm.info.oz
+    if (!text) return
+
+    try {
+        loading.value = true
+
+        const payload = {
+            text,
+            sourceLanguage: 'uz',
+        }
+        await questionStore.fetchTranslateText(payload)
+        ruleForm.info.oz = translateData?.value?.data?.translations?.oz
+        ruleForm.info.uz = translateData?.value?.data?.translations?.uz
+        ruleForm.info.ru = translateData?.value?.data?.translations?.ru
     } catch (err) {
         console.error(err)
         ElMessage.error('Translation failed')
