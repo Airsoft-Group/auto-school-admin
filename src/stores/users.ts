@@ -9,6 +9,8 @@ export interface Users {
     email: string
     role?: string
     password?: string
+    accessStartAt: string
+    accessEndAt: string
 }
 
 interface UsersState {
