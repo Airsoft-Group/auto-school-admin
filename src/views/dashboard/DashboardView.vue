@@ -10,7 +10,18 @@
         <el-table style="width: 100%" class="whiteStripe" row-class-name="cursor-pointer" :data="users.data" v-loading="loading">
             <el-table-column type="index" label="№" width="80" align="center" />
             <el-table-column prop="fullName" label="Name" min-width="200" />
+            <el-table-column prop="role" label="Role" min-width="200" />
             <el-table-column prop="email" label="Email" min-width="220" />
+            <el-table-column prop="accessStartAt" label="Access start" min-width="220">
+                <template #default="{ row }">
+                    {{ dayjs(row.accessStartAt).format('YYYY-MM-DD') }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="accessEndAt" label="Access end" min-width="220">
+                <template #default="{ row }">
+                    {{ dayjs(row.accessEndAt).format('YYYY-MM-DD') }}
+                </template>
+            </el-table-column>
             <el-table-column label="Password" min-width="180" align="center">
                 <template #default="{ row }">
                     <div class="flex items-center justify-center gap-2">
@@ -66,6 +77,27 @@
                     <el-form-item label="Password" prop="password">
                         <el-input v-model="ruleForm.password" placeholder="Enter password" />
                     </el-form-item>
+                    <el-form-item label="From date" prop="accessStartAt">
+                        <el-date-picker
+                            v-model="ruleForm.accessStartAt"
+                            type="date"
+                            placeholder="Select start date"
+                            format="YYYY-MM-DD"
+                            value-format="YYYY-MM-DD"
+                            style="width: 100%"
+                        />
+                    </el-form-item>
+
+                    <el-form-item label="To date" prop="accessEndAt">
+                        <el-date-picker
+                            v-model="ruleForm.accessEndAt"
+                            type="date"
+                            placeholder="Select end date"
+                            format="YYYY-MM-DD"
+                            value-format="YYYY-MM-DD"
+                            style="width: 100%"
+                        />
+                    </el-form-item>
                 </el-form>
             </div>
             <div class="flex items-center justify-between gap-3">
@@ -80,7 +112,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
-import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus'
+import { dayjs, ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus'
 import { useUserManagementStore } from '@/stores'
 import { DeleteFilled, EditPen, View } from '@element-plus/icons-vue'
 
@@ -97,12 +129,35 @@ const ruleForm = reactive({
     fullName: '',
     email: '',
     password: '',
+    accessStartAt: '',
+    accessEndAt: '',
 })
+
+const validateEndDate = (rule: any, value: string, callback: any) => {
+    if (!value) {
+        return callback(new Error('To date is required'))
+    }
+    if (ruleForm.accessStartAt && new Date(value) < new Date(ruleForm.accessStartAt)) {
+        return callback(new Error('To date must be after From date'))
+    }
+    callback()
+}
 
 const rules = reactive<FormRules>({
     fullName: [{ required: true, message: 'Name is required', trigger: 'blur' }],
-    email: [{ required: true, message: 'Email is required', trigger: 'blur' }],
-    password: [{ required: true, message: 'Password is required', trigger: 'blur' }],
+    email: [
+        { required: true, message: 'Email is required', trigger: 'blur' },
+        { type: 'email', message: 'Invalid email format', trigger: ['blur', 'change'] },
+    ],
+    password: [
+        { required: true, message: 'Password is required', trigger: 'blur' },
+        { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' },
+    ],
+    accessStartAt: [{ required: true, message: 'From date is required', trigger: 'change' }],
+    accessEndAt: [
+        { required: true, message: 'To date is required', trigger: 'change' },
+        { validator: validateEndDate, trigger: 'change' },
+    ],
 })
 
 onMounted(() => {
@@ -144,6 +199,8 @@ function openEditModal(user: any) {
         fullName: user.fullName,
         email: user.email,
         password: '',
+        accessStartAt: user.accessStartAt || '',
+        accessEndAt: user.accessEndAt || '',
     })
     isModalOpen.value = true
 }
@@ -152,6 +209,8 @@ function resetForm() {
     ruleForm.fullName = ''
     ruleForm.email = ''
     ruleForm.password = ''
+    ruleForm.accessEndAt = ''
+    ruleForm.accessStartAt = ''
 }
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -167,6 +226,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                         fullName: ruleForm.fullName,
                         email: ruleForm.email,
                         password: ruleForm.password,
+                        accessStartAt: ruleForm.accessStartAt,
+                        accessEndAt: ruleForm.accessEndAt,
                     })
                     ElMessage.success('User updated successfully')
                 } else {
