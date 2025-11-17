@@ -259,7 +259,7 @@ const router = useRouter()
 const editingId = ref<string | null>(null)
 const filters = reactive({
     page: 1,
-    limit: 10,
+    limit: 10000,
     search: undefined as any,
     subjectId: undefined as any,
     ticketId: undefined as any,
@@ -468,10 +468,10 @@ onMounted(() => {
     fetchQuestions()
 
     if (!ticketStore.getTicketSelect.length) {
-        ticketStore.fetchTickets({ page: 1, limit: 100 } as any)
+        ticketStore.fetchTickets({ page: 1, limit: 10000 } as any)
     }
     if (!subjectStore.getSubjectSelect.length) {
-        subjectStore.fetchSubjects({ page: 1, limit: 100 } as any)
+        subjectStore.fetchSubjects({ page: 1, limit: 10000 } as any)
     }
 })
 </script>

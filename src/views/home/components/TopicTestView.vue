@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] min-h-screen">
+    <div class="p-6 bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] h-full md:h-[calc(100vh-61px)]">
         <!-- Loading -->
         <div v-if="loading" class="p-6">
             <el-skeleton :rows="5" animated />
@@ -59,7 +59,7 @@
                     <el-tag :type="getTimerType()" size="large" class="!text-base !text-[#0061FF] !font-semibold">
                         ⏱ {{ formatTime(timeLeft) }}
                     </el-tag>
-                    <el-button type="success" size="large" class="flex-1 w-full !ml-0 mt-4 md:mt-0 !bg-[#18BB49] !border-none" @click="finishExam">
+                    <el-button type="success" size="large" class="flex-1 w-full !ml-0 md:mt-0 !bg-[#18BB49] !border-none" @click="finishExam">
                         {{ t('test.finish_exam') }}
                     </el-button>
                 </div>
@@ -86,9 +86,7 @@
                             <span class="text-white">{{ option.title?.[lang] }}</span>
                         </div>
                     </div>
-                    <el-button type="info" class="cursor-pointer" @click="openModal = true" :disabled="!selectedAnswer && !isCurrentQuestionAnswered"
-                        >Info</el-button
-                    >
+                    <el-button v-if="currentQuestion?.info" type="info" class="cursor-pointer" @click="openModal = true">Info</el-button>
                     <el-button
                         size="large"
                         class="flex-1 w-full mt-4"
@@ -104,9 +102,9 @@
                             v-if="currentQuestion?.file?.path"
                             :src="getImageUrl(currentQuestion.file.path)"
                             :alt="currentQuestion.file.name || 'Question Image'"
-                            class="w-full h-[500px] object-contain rounded-lg"
+                            class="w-full h-[400px] object-contain rounded-lg"
                         />
-                        <img v-else :src="DefaultImage" alt="" class="w-full h-[500px] object-contain rounded-lg" />
+                        <img v-else :src="DefaultImage" alt="" class="w-full h-[400px] object-contain rounded-lg" />
                     </div>
                     <div v-if="totalQuestions > 0" class="mt-5">
                         <div class="flex flex-wrap gap-2 justify-center mb-2">
@@ -124,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog v-if="!finished" v-model="openModal" :title="currentQuestion?.title?.[lang]" width="400px" :modal="true">
+        <el-dialog v-if="!finished && currentQuestion?.info" v-model="openModal" :title="currentQuestion?.title?.[lang]" width="400px" :modal="true">
             <div class="text-black text-base font-normal">
                 {{ currentQuestion?.info?.[lang] }}
             </div>

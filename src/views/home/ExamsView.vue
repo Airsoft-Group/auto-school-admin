@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 w-full bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] min-h-screen">
+    <div class="p-6 w-full bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] h-full md:h-[calc(100vh-61px)]">
         <div v-if="loading" class="p-6">
             <el-skeleton :rows="5" animated />
         </div>
@@ -94,9 +94,9 @@
                             v-if="currentQuestion?.file?.path"
                             :src="getImageUrl(currentQuestion.file.path)"
                             :alt="currentQuestion.file.name || 'Question Image'"
-                            class="w-full h-[500px] object-contain rounded-lg"
+                            class="w-full h-[400px] object-contain rounded-lg"
                         />
-                        <img v-else :src="DefaultImage" alt="" class="w-full h-[500px] object-contain rounded-lg" />
+                        <img v-else :src="DefaultImage" alt="" class="w-full h-[400px] object-contain rounded-lg" />
                     </div>
                     <div v-if="totalQuestions > 0" class="mt-5">
                         <div class="flex flex-wrap gap-2 justify-center mb-2">

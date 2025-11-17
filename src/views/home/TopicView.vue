@@ -68,7 +68,7 @@ const subjects = computed(() => subjectStore.subject.data)
 const meta = computed(
     () =>
         subjectStore.subject?.meta ?? {
-            pagination: { total: 0, limit: 10, page: 1, lastPage: 1 },
+            pagination: { total: 0, limit: 10000, page: 1, lastPage: 1 },
         }
 )
 
