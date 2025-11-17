@@ -1,100 +1,101 @@
 {
     "app": {
-        "title": "АвтоТест",
-        "login": "Кириш",
-        "logout": "Чиқиш",
-        "profile": "Профил",
-        "subjects": "Мавзулар бўйича тестлар",
-        "tickets": "Билетлар бўйича тестлар",
-        "exam": "Имтиҳон топшириш",
-        "ticket_list": "Билетлар рўйхати",
-        "topic_list": "Мавзулар рўйхати",
-        "back": "Орқага",
-        "home": "Асосий саҳифа",
-        "today": "Бугун",
-        "days": "кун",
-        "morning": "Эрталабки машғулот учун ажойиб вақт ☀️",
-        "afternoon": "Куннинг ўртасида машқ қилиш фойдали 🔋",
-        "evening": "Кечқурун ҳам ўрганишни давом эттиринг 🌙",
-        "readyToStudyToday": "Бугун ўқишни давом эттиришга тайёрмисиз?",
-        "hello": "Салом"
+        "title": "AvtoTest",
+        "login": "Kirish",
+        "logout": "Chiqish",
+        "profile": "Profil",
+        "subjects": "Mavzular bo‘yicha testlar",
+        "tickets": "Biletlar bo‘yicha testlar",
+        "exam": "Imtihon topshirish",
+        "ticket_list": "Biletlar ro‘yxati",
+        "topic_list": "Mavzular ro‘yxati",
+        "back": "Orqaga",
+        "home": "Asosiy sahifa",
+        "today": "Bugun",
+        "days": "kun",
+        "morning": "Ertalabki mashg‘ulot uchun ajoyib vaqt ☀️",
+        "afternoon": "Kunning o‘rtasida mashq qilish foydali 🔋",
+        "evening": "Kechqurun ham o‘rganishni davom ettiring 🌙",
+        "readyToStudyToday": "Bugun o‘qishni davom ettirishga tayyormisiz?",
+        "hello": "Salom"
     },
     "stats": {
-        "completed_tests": "Ишланган тестлар",
-        "highest_result": "Энг юқори натижа",
-        "last_test": "Сўнгги тест"
+        "completed_tests": "Ishlangan testlar",
+        "highest_result": "Eng yuqori natija",
+        "last_test": "So‘nggi test"
     },
     "dashboard": {
-        "hello": "Салом, {name}! 👋",
-        "level": "Даража: Бошланғич",
-        "continue": "Бугун тест ишлашни давом эттирамизми? Қуйидагилардан бирини танланг:",
+        "hello": "Salom, {name}! 👋",
+        "level": "Daraja: Boshlang‘ich",
+        "continue": "Bugun test ishlashni davom ettiramizmi? Quyidagilardan birini tanlang:",
         "stats": {
-            "tests_done": "Ишланган тестлар",
-            "best_score": "Энг юқори натижа",
-            "last_test": "Сўнгги тест"
+            "tests_done": "Ishlangan testlar",
+            "best_score": "Eng yuqori natija",
+            "last_test": "So‘nggi test"
         },
         "cards": {
             "topics": {
-                "title": "Мавзулар бўйича тестлар",
-                "desc": "Ҳар бир мавзуни алоҳида ўрганинг ва тест ишланг.",
-                "btn": "Бошлаш"
+                "title": "Mavzular bo‘yicha testlar",
+                "desc": "Har bir mavzuni alohida o‘rganing va test ishlang.",
+                "btn": "Boshlash"
             },
             "tickets": {
-                "title": "Билетлар бўйича тестлар",
-                "desc": "Расмий имтиҳон билетлари асосида машқ қилинг.",
-                "btn": "Бошлаш"
+                "title": "Biletlar bo‘yicha testlar",
+                "desc": "Rasmiy imtihon biletlari asosida mashq qiling.",
+                "btn": "Boshlash"
             },
             "exam": {
-                "title": "Якуний имтиҳон",
-                "desc": "Реал имтиҳон форматида ўзингизни синаб кўринг.",
-                "btn": "Топшириш"
+                "title": "Yakuniy imtihon",
+                "desc": "Real imtihon formatida o‘zingizni sinab ko‘ring.",
+                "btn": "Boshlash"
             }
         },
         "recent": {
-            "title": "Сўнгги тестлар",
-            "name": "Тест номи",
-            "score": "Натижа (%)",
-            "date": "Сана",
-            "status": "Ҳолат",
-            "passed": "Ўтган",
-            "failed": "Ўтолмаган"
+            "title": "So‘nggi testlar",
+            "name": "Test nomi",
+            "score": "Natija (%)",
+            "date": "Sana",
+            "status": "Holat",
+            "passed": "O‘tgan",
+            "failed": "O‘tolmagan"
         }
     },
     "test": {
-        "question": "Савол",
-        "next": "Кейингиси",
-        "exam_finished": "Тест якунланди!",
-        "restart": "Қайта бошлаш",
-        "finish_exam": "Тестни якунлаш",
-        "great_job": "Ажойиб иш, шундай давом этинг!",
-        "correct_answers": "Тўғри жавоблар",
-        "result_submitted_successfully": "Натижа муваффақиятли юборилди"
+        "question": "Savol",
+        "next": "Keyingisi",
+        "exam_finished": "Test yakunlandi!",
+        "restart": "Qayta boshlash",
+        "finish_exam": "Testni yakunlash",
+        "great_job": "Ajoyib ish, shunday davom eting!",
+        "correct_answers": "To‘g‘ri javoblar",
+        "result_submitted_successfully": "Natija muvaffaqiyatli yuborildi"
     },
     "landing": {
-        "subtitle_line1": "Сизнинг йўлдаги",
-        "subtitle_line2": "ҳамроҳингиз",
-        "description": "Ҳайдовчилик гувоҳномасига тайёрланиш учун мукаммал жой: йўл ҳаракати қоидаларини ўрганинг, интерактив тестларни ечинг ва ҳақиқий имтиҳон олдидан ўзингизни синаб кўринг.",
-        "login_button": "Тизимга кириш"
+        "subtitle_line1": "Sizning yo‘ldagi",
+        "subtitle_line2": "hamrohingiz",
+        "description": "Haydovchilik guvohnomasiga tayyorlanish uchun mukammal joy: yo‘l harakati qoidalarini o‘rganing, interaktiv testlarni yeching va haqiqiy imtihon oldidan o‘zingizni sinab ko‘ring.",
+        "login_button": "Tizimga kirish"
     },
     "auth": {
-        "login_title": "Тизимга кириш",
-        "login_description": "Тизимга кириш учун логин ва паролингизни киритинг.",
-        "login_label": "Логин",
-        "password_label": "Парол",
-        "login_placeholder": "Логинингизни киритинг",
-        "password_placeholder": "Паролингизни киритинг",
-        "login_button": "Кириш",
-        "back_to_home": "Асосий саҳифага қайтиш",
-        "or_text": "ёки"
+        "login_title": "Tizimga kirish",
+        "login_description": "Tizimga kirish uchun login va parolingizni kiriting.",
+        "login_label": "Login",
+        "password_label": "Parol",
+        "login_placeholder": "Loginingizni kiriting",
+        "password_placeholder": "Parolingizni kiriting",
+        "login_button": "Kirish",
+        "back_to_home": "Asosiy sahifaga qaytish",
+        "or_text": "yoki",
+        "home": "Asosiy sahifa"
     },
     "validation": {
-        "email_required": "Илтимос, логинни киритинг",
-        "password_required": "Илтимос, паролни киритинг",
-        "password_min": "Парол камида 6 та белгидан иборат бўлиши керак"
+        "email_required": "Iltimos, loginni kiriting",
+        "password_required": "Iltimos, parolni kiriting",
+        "password_min": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak"
     },
     "messages": {
-        "login_success": "Тизимга муваффақиятли кирдингиз",
-        "login_error": "Логин ёки парол нотўғри",
-        "unknown_error": "Номаълум хатолик юз берди"
+        "login_success": "Tizimga muvaffaqiyatli kirdingiz",
+        "login_error": "Login yoki parol noto‘g‘ri",
+        "unknown_error": "Noma’lum xatolik yuz berdi"
     }
 }

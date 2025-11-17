@@ -15,6 +15,7 @@ export interface Question {
         path: string
         name?: string
     }
+    info?: { [key: string]: string }
 }
 
 export interface Subject {

@@ -169,11 +169,11 @@
                     </el-form-item>
 
                     <el-form-item label="Question (Kirill)" prop="title.uz">
-                        <el-input type="textarea" v-model="ruleForm.title.uz" placeholder="Tarjima (Kirill)" :rows="4" readonly />
+                        <el-input type="textarea" v-model="ruleForm.title.uz" placeholder="Tarjima (Kirill)" :rows="4" />
                     </el-form-item>
 
                     <el-form-item label="Question (Ruscha)" prop="title.ru">
-                        <el-input type="textarea" v-model="ruleForm.title.ru" placeholder="Tarjima (Ruscha)" :rows="4" readonly />
+                        <el-input type="textarea" v-model="ruleForm.title.ru" placeholder="Tarjima (Ruscha)" :rows="4" />
                     </el-form-item>
                     <el-form-item label="Info (O‘zbekcha)" prop="info.oz" class="relative">
                         <el-mention type="textarea" v-model="ruleForm.info.oz" placeholder="Tarjima (Uzbek)" />

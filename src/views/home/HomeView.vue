@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-full h-[92.5vh] bg-gradient-to-br from-sky-50 via-white to-blue-50 overflow-hidden">
+    <div class="relative w-full h-full md:h-[92.5vh] bg-gradient-to-br from-sky-50 via-white to-blue-50 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
             <div
