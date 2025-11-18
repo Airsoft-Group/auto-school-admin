@@ -42,6 +42,12 @@ const router = createRouter({
                     component: () => import('../views/home/ExamsView.vue'),
                     meta: { isPublic: true },
                 },
+                {
+                    path: 'saved-questions',
+                    name: 'saved-questions',
+                    component: () => import('../views/home/SaveQuestion.vue'),
+                    meta: { isPublic: true },
+                },
             ],
         },
         {

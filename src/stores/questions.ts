@@ -35,6 +35,7 @@ interface QuestionState {
     questionTicketId: any
     translate: any
     answerDetail: any
+    savedQuestion: any
 }
 
 export const useQuestionStore = defineStore('question', {
@@ -47,6 +48,7 @@ export const useQuestionStore = defineStore('question', {
         questionTicketId: null,
         translate: null,
         answerDetail: null,
+        savedQuestion: null,
     }),
 
     actions: {
@@ -91,6 +93,19 @@ export const useQuestionStore = defineStore('question', {
         },
         async deleteAnswer(id: string) {
             return request.delete(`/v1/answers/${id}`)
+        },
+        async fetchSavedQuestion(filters: {
+            page: number
+            limit: number
+            search?: string | null
+            subjectId?: string | null
+            ticketId?: string | null
+        }) {
+            const res = await request.get('/v1/saved-questions', { params: filters })
+            this.savedQuestion = res
+        },
+        async savedQuestions(data: { questionId: string }) {
+            return request.post(`/v1/saved-questions`, data)
         },
         // async viewPassword(id: string) {
         //     const response = await request.get(`/v1/users/${id}/password`)

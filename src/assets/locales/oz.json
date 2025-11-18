@@ -6,6 +6,7 @@
         "profile": "Profil",
         "subjects": "Mavzular bo‘yicha testlar",
         "tickets": "Biletlar bo‘yicha testlar",
+        "saved_question": "Saqlangan savollar",
         "exam": "Imtihon topshirish",
         "ticket_list": "Biletlar ro‘yxati",
         "topic_list": "Mavzular ro‘yxati",
@@ -17,7 +18,9 @@
         "afternoon": "Kunning o‘rtasida mashq qilish foydali 🔋",
         "evening": "Kechqurun ham o‘rganishni davom ettiring 🌙",
         "readyToStudyToday": "Bugun o‘qishni davom ettirishga tayyormisiz?",
-        "hello": "Salom"
+        "hello": "Salom",
+        "no_save_data": "Saqlangan savollar mavjud emas",
+        "no_save_data_2": "Keyinroq saqlagan savollaringiz shu yerda paydo bo‘ladi"
     },
     "stats": {
         "completed_tests": "Ishlangan testlar",
@@ -48,6 +51,11 @@
                 "title": "Yakuniy imtihon",
                 "desc": "Real imtihon formatida o‘zingizni sinab ko‘ring.",
                 "btn": "Boshlash"
+            },
+            "savedQuestions": {
+                "title": "Saqlangan Savollar",
+                "desc": "O'zingizni qiziqtirgan yoki keyinroq ko'rib chiqmoqchi bo'lgan savollarni shu bo'limdan topishingiz mumkin.",
+                "btn": "Ko'rish"
             }
         },
         "recent": {

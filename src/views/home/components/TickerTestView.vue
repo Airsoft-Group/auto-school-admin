@@ -59,6 +59,11 @@
                     <el-tag :type="getTimerType()" size="large" class="!text-base !text-[#0061FF] !font-semibold">
                         ⏱ {{ formatTime(timeLeft) }}
                     </el-tag>
+                    <button class="text-white hover:text-yellow-300 transition-colors" @click="saveQuestion(currentQuestion?.id)" title="Saqlash">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 2a2 2 0 0 0-2 2v18l8-4 8 4V4a2 2 0 0 0-2-2H6z" />
+                        </svg>
+                    </button>
                     <el-button type="success" size="large" class="flex-1 w-full !ml-0 md:mt-0 !bg-[#18BB49] !border-none" @click="finishExam">
                         {{ t('test.finish_exam') }}
                     </el-button>
@@ -181,6 +186,16 @@ const finishExam = async () => {
     } catch (error) {
         console.error('Natija yuborishda xatolik:', error)
         ElMessage.error(t('test.result_submission_failed'))
+    }
+}
+
+const saveQuestion = async (id: string | undefined) => {
+    if (!id) return
+    try {
+        await questionStore.savedQuestions({ questionId: id })
+        ElMessage.success('Savol saqlandi!')
+    } catch (err) {
+        ElMessage.error('Saqlashda xatolik!')
     }
 }
 const goToTopics = () => {
