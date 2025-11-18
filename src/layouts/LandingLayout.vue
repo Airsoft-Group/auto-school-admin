@@ -19,7 +19,7 @@
                         <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
                             {{ user.fullName?.charAt(0).toUpperCase() || 'U' }}
                         </div>
-                        <div class="flex flex-col text-left leading-tight">
+                        <div class="md:flex flex-col text-left leading-tight hidden">
                             <span class="text-sm font-medium text-gray-800">
                                 {{ user.fullName }}
                             </span>

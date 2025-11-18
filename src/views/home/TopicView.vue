@@ -8,7 +8,7 @@
             <h2 class="text-2xl font-bold text-gray-800">📚 {{ $t('app.topic_list') }}</h2>
         </div>
         <div v-if="loading" class="space-y-4">
-            <el-card v-for="n in 8" :key="n" class="p-4" shadow="never">
+            <el-card v-for="n in 8" :key="n" class="p-2 md:p-4" shadow="never">
                 <div class="flex justify-between items-center">
                     <div class="flex-1">
                         <el-skeleton :rows="1" animated style="width: 50%" />
@@ -20,13 +20,13 @@
         <div v-else>
             <el-card
                 shadow="hover"
-                class="mb-4 cursor-pointer hover:shadow-md transition-all duration-200"
+                class="mb-4 cursor-pointer hover:shadow-md transition-all duration-200 !p-2"
                 v-for="(subject, index) in subjects"
                 :key="subject.id"
                 @click="openSubject(subject.id, subject.name?.[lang])"
             >
-                <div class="flex items-center gap-2">
-                    <span class="text-gray-500 font-medium text-right"> {{ (currentPage - 1) * meta.pagination.limit + index + 1 }} ) </span>
+                <div class="flex gap-2 w-full">
+                    <span class="text-gray-500 font-medium text-right"> {{ (currentPage - 1) * meta.pagination.limit + index + 1 }}. </span>
                     <h3 class="text-lg font-semibold text-gray-800 capitalize">{{ subject.name?.[lang] }}</h3>
                 </div>
             </el-card>
@@ -68,7 +68,7 @@ const subjects = computed(() => subjectStore.subject.data)
 const meta = computed(
     () =>
         subjectStore.subject?.meta ?? {
-            pagination: { total: 0, limit: 10, page: 1, lastPage: 1 },
+            pagination: { total: 0, limit: 10000, page: 1, lastPage: 1 },
         }
 )
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6">
+    <div class="p-6 bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] h-full md:h-[calc(100vh-61px)]">
         <!-- Loading -->
         <div v-if="loading" class="p-6">
             <el-skeleton :rows="5" animated />
@@ -7,21 +7,17 @@
 
         <div v-else-if="finished" class="flex flex-col items-center justify-center min-h-[70vh] py-10">
             <div class="relative p-10 text-center max-w-md w-full animate-fadeIn">
-                <!-- Animated check icon -->
                 <div class="flex justify-center mb-6">
-                    <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center shadow-inner animate-bounceIn">
-                        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <div class="w-20 h-20 rounded-full bg-[#D2FFE0] flex items-center justify-center shadow-inner animate-bounceIn">
+                        <svg class="w-10 h-10 text-[#18BB49]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
                 </div>
-
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                <h2 class="text-3xl font-bold text-[#fff] mb-2">
                     {{ t('test.exam_finished') }}
                 </h2>
-                <p class="text-gray-500 mb-6">{{ t('test.great_job') || 'Great job, keep it up!' }}</p>
-
-                <!-- Score circle -->
+                <p class="text-white mb-6">{{ t('test.great_job') || 'Great job, keep it up!' }}</p>
                 <div class="relative flex justify-center items-center mb-8">
                     <div class="w-36 h-36 rounded-full border-[10px] border-gray-200 flex items-center justify-center relative">
                         <div
@@ -29,23 +25,25 @@
                             :style="{ clipPath: 'inset(' + (100 - (score / totalQuestions) * 100) + '% 0 0 0)' }"
                         ></div>
                         <div class="text-center">
-                            <p class="text-4xl font-extrabold text-green-600">{{ ((score / totalQuestions) * 100).toFixed(0) }}%</p>
+                            <p class="text-4xl font-extrabold text-white">{{ ((score / totalQuestions) * 100).toFixed(0) }}%</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Stats -->
                 <div class="mb-6">
-                    <p class="text-xl text-gray-700 mb-1">
-                        {{ t('test.correct_answers') }}: <span class="font-semibold text-blue-600">{{ score }}</span> /
-                        <span class="text-gray-500">{{ totalQuestions }}</span>
+                    <p class="text-xl text-white mb-1">
+                        {{ t('test.correct_answers') }}: <span class="font-bold text-[#18BB49]">{{ score }}</span> /
+                        <span class="text-white">{{ totalQuestions }}</span>
                     </p>
                 </div>
 
                 <!-- Buttons -->
                 <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
                     <el-button type="primary" size="large" class="!px-8 !rounded-full" @click="goToHome"> {{ t('app.home') }} </el-button>
-                    <el-button type="success" size="large" class="!px-8 !rounded-full" @click="goToTopics"> {{ t('app.ticket_list') }} </el-button>
+                    <el-button size="large" class="!px-8 !rounded-full !text-white !bg-[#18BB49] !border-none" @click="goToTopics">
+                        {{ t('app.ticket_list') }}
+                    </el-button>
                 </div>
             </div>
         </div>
@@ -54,73 +52,90 @@
         <div v-else>
             <div class="flex justify-between items-center mb-4">
                 <div class="flex flex-col gap-2">
-                    <h1 class="text-xl font-bold capitalize">{{ ticketName || 'Bilet nomi' }}</h1>
-                    <h2 class="text-lg font-semibold">{{ t('test.question') }} {{ currentIndex + 1 }}/{{ totalQuestions }}</h2>
+                    <h2 class="text-lg font-semibold text-white">{{ t('test.question') }} {{ currentIndex + 1 }}/{{ totalQuestions }}</h2>
+                    <h1 class="text-xl font-bold capitalize text-white">{{ ticketName || 'Bilet nomi' }}</h1>
                 </div>
-                <el-tag :type="getTimerType()" size="large" class="text-sm !text-[#fff]"> ⏱ {{ formatTime(timeLeft) }} </el-tag>
+                <div class="flex items-center gap-4">
+                    <el-tag :type="getTimerType()" size="large" class="!text-base !text-[#0061FF] !font-semibold">
+                        ⏱ {{ formatTime(timeLeft) }}
+                    </el-tag>
+                    <button
+                        class="text-white hover:text-yellow-300 transition-colors"
+                        :class="currentQuestion?.isSaved ? 'text-yellow-300' : 'text-white'"
+                        @click="saveQuestion(currentQuestion?.id)"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 2a2 2 0 0 0-2 2v18l8-4 8 4V4a2 2 0 0 0-2-2H6z" />
+                        </svg>
+                    </button>
+                    <el-button type="success" size="large" class="flex-1 w-full !ml-0 md:mt-0 !bg-[#18BB49] !border-none" @click="finishExam">
+                        {{ t('test.finish_exam') }}
+                    </el-button>
+                </div>
             </div>
 
-            <div class="grid gap-6 md:grid-cols-[40%_60%] grid-cols-1">
-                <div class="bg-white p-5 rounded-lg shadow-sm border mb-4">
-                    <p class="text-gray-800 font-medium text-lg mb-4">
-                        {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
-                    </p>
-                    <div class="space-y-3">
+            <div class="border-white bg-[#FF2D55] p-5 rounded-lg shadow-sm border mb-4">
+                <p class="text-white font-bold text-lg mb-4">
+                    {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
+                </p>
+            </div>
+            <div class="grid md:gap-6 md:grid-cols-3 grid-cols-1">
+                <div class="mb-4">
+                    <div class="space-y-3 mb-4">
                         <div
                             v-for="(option, i) in currentQuestion?.answers || []"
                             :key="option.id"
-                            class="flex items-center gap-3 border rounded-lg px-4 py-3 transition-all"
+                            class="flex items-center gap-3 border rounded-lg px-4 py-3 transition-all cursor-pointer"
                             :class="answerClass(option.id)"
                             @click="selectAnswer(option.id)"
                         >
-                            <span class="font-semibold text-blue-600 min-w-[40px]"> F{{ i + 1 }}. </span>
-                            <span class="text-gray-800">
-                                {{ option.title?.[lang] }}
-                            </span>
+                            <span class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] h-[40px] flex items-center justify-center"
+                                >F{{ i + 1 }}.</span
+                            >
+                            <span class="text-white">{{ option.title?.[lang] }}</span>
                         </div>
                     </div>
-                </div>
-                <div class="p-5 rounded-lg shadow-sm border mb-4 flex items-center justify-center overflow-hidden">
-                    <img
-                        v-if="currentQuestion?.file?.path"
-                        :src="getImageUrl(currentQuestion.file.path)"
-                        :alt="currentQuestion.file.name || 'Question Image'"
-                        class="w-full h-full object-contain rounded-lg"
-                    />
-                    <img v-else :src="DefaultImage" alt="" />
-                </div>
-            </div>
-            <div class="flex flex-col justify-center">
-                <div v-if="totalQuestions > 0" class="mt-6">
-                    <div class="flex flex-wrap gap-2 justify-center mb-4">
-                        <button
-                            v-for="(_, index) in Array(totalQuestions)"
-                            :key="index"
-                            class="w-10 h-10 rounded-full font-semibold transition-all border-2"
-                            :class="getPaginationButtonClass(index)"
-                            @click="handlePageChange(index + 1)"
-                        >
-                            {{ index + 1 }}
-                        </button>
-                    </div>
-                </div>
-                <div class="flex gap-3 mt-4 min-w-[700px] justify-center items-center mx-auto">
+                    <el-button v-if="currentQuestion?.info" type="info" class="cursor-pointer" @click="openModal = true">Info</el-button>
                     <el-button
-                        type="primary"
                         size="large"
-                        class="flex-1 w-full"
+                        class="flex-1 w-full mt-4 !ml-0"
                         :disabled="!selectedAnswer && !isCurrentQuestionAnswered"
                         @click="nextQuestion"
                     >
                         {{ t('test.next') }} <el-icon> <Right /></el-icon>
                     </el-button>
-
-                    <el-button type="success" size="large" class="flex-1 w-full" @click="finishExam">
-                        {{ t('test.finish_exam') }}
-                    </el-button>
+                </div>
+                <div class="col-span-2">
+                    <div class="p-5 mb-4 flex flex-col overflow-hidden shadow-sm border border-[#fff] rounded-xl">
+                        <img
+                            v-if="currentQuestion?.file?.path"
+                            :src="getImageUrl(currentQuestion.file.path)"
+                            :alt="currentQuestion.file.name || 'Question Image'"
+                            class="w-full h-[400px] object-contain rounded-lg"
+                        />
+                        <img v-else :src="DefaultImage" alt="" class="w-full h-[400px] object-contain rounded-lg" />
+                    </div>
+                    <div v-if="totalQuestions > 0" class="mt-5">
+                        <div class="flex flex-wrap gap-2 justify-center mb-2">
+                            <button
+                                v-for="(_, index) in Array(totalQuestions)"
+                                :key="index"
+                                class="w-10 h-10 rounded-full font-semibold transition-all border-2"
+                                :class="getPaginationButtonClass(index)"
+                                @click="handlePageChange(index + 1)"
+                            >
+                                {{ index + 1 }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <el-dialog v-if="!finished && currentQuestion?.info" v-model="openModal" :title="currentQuestion?.title?.[lang]" width="400px" :modal="true">
+            <div class="text-black text-base font-normal">
+                {{ currentQuestion?.info?.[lang] }}
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script setup lang="ts">
@@ -139,6 +154,7 @@ const { t, locale } = useI18n()
 
 const lang = computed(() => locale.value)
 const loading = ref(true)
+const openModal = ref(false)
 const router = useRouter()
 const ticket = ref<ReturnType<typeof useExam> | null>(null)
 const ticketName = computed(() => route.query.name as string)
@@ -174,6 +190,23 @@ const finishExam = async () => {
     } catch (error) {
         console.error('Natija yuborishda xatolik:', error)
         ElMessage.error(t('test.result_submission_failed'))
+    }
+}
+
+const saveQuestion = async (id: string | undefined) => {
+    if (!id) return
+    const question = ticket.value?.questions.find((q) => q.id === id)
+    if (!question) return
+    try {
+        const response = await questionStore.savedQuestions({ questionId: id })
+        question.isSaved = response.data?.isSaved ?? !question.isSaved
+        if (question.isSaved) {
+            ElMessage.success('Savol saqlandi!')
+        } else {
+            ElMessage.info('Savol saqlashdan olib tashlandi')
+        }
+    } catch (err) {
+        ElMessage.error('Saqlashda xatolik!')
     }
 }
 const goToTopics = () => {
@@ -213,18 +246,18 @@ const answerClass = (answerId: string): string => {
 
     if (isAnswered) {
         if (isSelected) {
-            return answer?.isCorrect ? 'border-green-500 bg-green-50 cursor-not-allowed' : 'border-red-500 bg-red-50 cursor-not-allowed'
+            return answer?.isCorrect ? 'border-[#18BB49] bg-[#18BB49] cursor-not-allowed' : 'border-[#FF2D55] bg-[#FF2D55] cursor-not-allowed'
         }
 
         if (answer?.isCorrect) {
-            return 'border-green-500 bg-green-100 cursor-not-allowed'
+            return 'border-[#18BB49] bg-[#18BB49] cursor-not-allowed'
         }
 
         return 'border-gray-200 opacity-50 cursor-not-allowed'
     }
 
     if (isSelected) {
-        return 'border-blue-500 bg-blue-50 cursor-pointer hover:shadow-md'
+        return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
     return 'border-gray-200 cursor-pointer hover:border-blue-300 hover:shadow-md'
@@ -251,7 +284,7 @@ const getPaginationButtonClass = (index: number): string => {
     }
 
     if (isCurrent) {
-        baseClass += ' ring-4 ring-blue-300 scale-110'
+        baseClass += 'ring-2 inset-ring scale-110'
     }
 
     return baseClass

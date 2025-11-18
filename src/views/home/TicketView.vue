@@ -59,7 +59,7 @@ const tickets = computed(() => ticketStore.ticket?.data)
 const meta = computed(
     () =>
         ticketStore.ticket?.meta ?? {
-            pagination: { total: 0, limit: 20, page: 1, lastPage: 1 },
+            pagination: { total: 0, limit: 10000, page: 1, lastPage: 1 },
         }
 )
 const loading = ref(false)
@@ -67,7 +67,7 @@ const loading = ref(false)
 const currentPage = ref(1)
 const fetchPage = async (page: number) => {
     loading.value = true
-    await ticketStore.fetchTickets({ page })
+    await ticketStore.fetchTickets({ page } as any)
     currentPage.value = page
     loading.value = false
 }

@@ -1,22 +1,22 @@
 <template>
-    <div class="p-5 w-full">
+    <div class="p-6 w-full bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] h-full md:h-[calc(100vh-61px)]">
         <div v-if="loading" class="p-6">
             <el-skeleton :rows="5" animated />
         </div>
         <div v-else-if="finished" class="flex flex-col items-center justify-center min-h-[70vh] py-10">
             <div class="relative p-10 text-center max-w-md w-full animate-fadeIn">
                 <div class="flex justify-center mb-6">
-                    <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center shadow-inner animate-bounceIn">
-                        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <div class="w-20 h-20 rounded-full bg-[#D2FFE0] flex items-center justify-center shadow-inner animate-bounceIn">
+                        <svg class="w-10 h-10 text-[#18BB49]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
                 </div>
 
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                <h2 class="text-3xl font-bold text-[#fff] mb-2">
                     {{ t('test.exam_finished') }}
                 </h2>
-                <p class="text-gray-500 mb-6">{{ t('test.great_job') || 'Great job, keep it up!' }}</p>
+                <p class="text-white mb-6">{{ t('test.great_job') || 'Great job, keep it up!' }}</p>
 
                 <div class="relative flex justify-center items-center mb-8">
                     <div class="w-36 h-36 rounded-full border-[10px] border-gray-200 flex items-center justify-center relative">
@@ -25,36 +25,46 @@
                             :style="{ clipPath: 'inset(' + (100 - (score / totalQuestions) * 100) + '% 0 0 0)' }"
                         ></div>
                         <div class="text-center">
-                            <p class="text-4xl font-extrabold text-green-600">{{ ((score / totalQuestions) * 100).toFixed(0) }}%</p>
+                            <p class="text-4xl font-extrabold text-white">{{ ((score / totalQuestions) * 100).toFixed(0) }}%</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-6">
-                    <p class="text-xl text-gray-700 mb-1">
-                        {{ t('test.correct_answers') }}: <span class="font-semibold text-blue-600">{{ score }}</span> /
-                        <span class="text-gray-500">{{ totalQuestions }}</span>
+                    <p class="text-xl text-white mb-1">
+                        {{ t('test.correct_answers') }}: <span class="font-bold text-[#18BB49]">{{ score }}</span> /
+                        <span class="text-white">{{ totalQuestions }}</span>
                     </p>
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
-                    <el-button type="success" size="large" class="!px-8 !rounded-full" @click="goToTopics"> {{ t('app.home') }} </el-button>
+                    <el-button size="large" class="!px-8 !rounded-full !text-white !border-none !bg-[#18BB49]" @click="goToTopics">
+                        {{ t('app.home') }}
+                    </el-button>
                 </div>
             </div>
         </div>
         <div v-else>
             <div class="flex justify-between items-center mb-4">
                 <div class="flex flex-col gap-2">
-                    <h1 class="text-xl font-bold capitalize">{{ 'Exam' }}</h1>
-                    <h2 class="text-lg font-semibold">{{ t('test.question') }} {{ currentIndex + 1 }}/{{ totalQuestions }}</h2>
+                    <h2 class="text-lg font-semibold text-white">{{ t('test.question') }} {{ currentIndex + 1 }}/{{ totalQuestions }}</h2>
                 </div>
-                <el-tag :type="getTimerType()" size="large" class="text-sm !text-[#fff]"> ⏱ {{ formatTime(timeLeft) }} </el-tag>
+                <div class="flex items-center gap-4">
+                    <el-tag :type="getTimerType()" size="large" class="!text-base !text-[#0061FF] !font-semibold">
+                        ⏱ {{ formatTime(timeLeft) }}
+                    </el-tag>
+                    <el-button type="success" size="large" class="flex-1 w-full !ml-0 mt-4 md:mt-0 !bg-[#18BB49] !border-none" @click="finishExam">
+                        {{ t('test.finish_exam') }}
+                    </el-button>
+                </div>
             </div>
-            <div class="grid gap-4 md:grid-cols-[40%_60%] grid-cols-1 w-full items-start justify-center">
-                <div class="bg-white p-5 rounded-lg shadow-sm border mb-4">
-                    <p class="text-gray-800 font-medium text-lg mb-4">
-                        {{ currentQuestion?.title?.[lang] || t('test.loading_question') }}
-                    </p>
+            <div class="border-white bg-[#FF2D55] p-5 rounded-lg shadow-sm border mb-4">
+                <p class="text-white font-bold text-lg mb-4">
+                    {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
+                </p>
+            </div>
+            <div class="grid gap-6 md:grid-cols-3 grid-cols-1">
+                <div class="mb-4">
                     <div class="space-y-3">
                         <div
                             v-for="(option, i) in currentQuestion?.answers || []"
@@ -63,49 +73,44 @@
                             :class="answerClass(option.id)"
                             @click="selectAnswer(option.id)"
                         >
-                            <span class="font-semibold text-blue-600 min-w-[40px]"> F{{ i + 1 }}. </span>
-                            <span class="text-gray-800">{{ option.title?.[lang] }}</span>
+                            <span class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] h-[40px] flex items-center justify-center"
+                                >F{{ i + 1 }}.</span
+                            >
+                            <span class="text-white">{{ option.title?.[lang] }}</span>
                         </div>
                     </div>
-                </div>
-                <div class="p-5 rounded-lg shadow-sm border mb-4 overflow-hidden">
-                    <img
-                        v-if="currentQuestion?.file?.path"
-                        :src="getImageUrl(currentQuestion.file.path)"
-                        :alt="currentQuestion.file.name || 'Question Image'"
-                        class="w-full h-full object-contain rounded-lg mx-auto"
-                    />
-                    <img v-else :src="DefaultImage" class="w-full h-full rounded-lg object-contain mx-auto" alt="Default" />
-                </div>
-            </div>
-            <div v-if="!loading" class="flex flex-col justify-center mt-6">
-                <div v-if="totalQuestions > 0" class="flex flex-wrap gap-2 justify-center mb-4">
-                    <button
-                        v-for="(_, index) in Array(totalQuestions)"
-                        :key="index"
-                        class="w-10 h-10 rounded-full font-semibold transition-all border-2"
-                        :class="getPaginationButtonClass(index)"
-                        @click="handlePageChange(index + 1)"
-                    >
-                        {{ index + 1 }}
-                    </button>
-                </div>
-
-                <div class="flex gap-3 mt-4 min-w-[700px] justify-center items-center mx-auto">
                     <el-button
-                        type="primary"
                         size="large"
-                        class="flex-1 w-full"
+                        class="flex-1 w-full mt-4"
                         :disabled="!selectedAnswer && !isCurrentQuestionAnswered"
                         @click="nextQuestion"
                     >
-                        {{ t('test.next') }}
-                        <el-icon><Right /></el-icon>
+                        {{ t('test.next') }} <el-icon> <Right /></el-icon>
                     </el-button>
-
-                    <el-button type="success" size="large" class="flex-1 w-full" @click="finishExam">
-                        {{ t('test.finish_exam') }}
-                    </el-button>
+                </div>
+                <div class="col-span-2">
+                    <div class="p-5 mb-4 flex flex-col overflow-hidden shadow-sm border border-[#fff] rounded-xl">
+                        <img
+                            v-if="currentQuestion?.file?.path"
+                            :src="getImageUrl(currentQuestion.file.path)"
+                            :alt="currentQuestion.file.name || 'Question Image'"
+                            class="w-full h-[400px] object-contain rounded-lg"
+                        />
+                        <img v-else :src="DefaultImage" alt="" class="w-full h-[400px] object-contain rounded-lg" />
+                    </div>
+                    <div v-if="totalQuestions > 0" class="mt-5">
+                        <div class="flex flex-wrap gap-2 justify-center mb-2">
+                            <button
+                                v-for="(_, index) in Array(totalQuestions)"
+                                :key="index"
+                                class="w-10 h-10 rounded-full font-semibold transition-all border-2"
+                                :class="getPaginationButtonClass(index)"
+                                @click="handlePageChange(index + 1)"
+                            >
+                                {{ index + 1 }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -194,18 +199,18 @@ const answerClass = (answerId: string): string => {
 
     if (isAnswered) {
         if (isSelected) {
-            return answer?.isCorrect ? 'border-green-500 bg-green-50 cursor-not-allowed' : 'border-red-500 bg-red-50 cursor-not-allowed'
+            return answer?.isCorrect ? 'border-[#18BB49] bg-[#18BB49] cursor-not-allowed' : 'border-[#FF2D55] bg-[#FF2D55] cursor-not-allowed'
         }
 
         if (answer?.isCorrect) {
-            return 'border-green-500 bg-green-100 cursor-not-allowed'
+            return 'border-[#18BB49] bg-[#18BB49] cursor-not-allowed'
         }
 
         return 'border-gray-200 opacity-50 cursor-not-allowed'
     }
 
     if (isSelected) {
-        return 'border-blue-500 bg-blue-50 cursor-pointer hover:shadow-md'
+        return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
     return 'border-gray-200 cursor-pointer hover:border-blue-300 hover:shadow-md'
@@ -232,7 +237,7 @@ const getPaginationButtonClass = (index: number): string => {
     }
 
     if (isCurrent) {
-        baseClass += ' ring-4 ring-blue-300 scale-110'
+        baseClass += 'ring-2 inset-ring scale-110'
     }
 
     return baseClass

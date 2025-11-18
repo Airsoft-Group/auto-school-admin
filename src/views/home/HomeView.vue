@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-full h-[92.5vh] bg-gradient-to-br from-sky-50 via-white to-blue-50 overflow-hidden">
+    <div class="relative w-full h-full md:h-[92.5vh] bg-gradient-to-br from-sky-50 via-white to-blue-50 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
             <div
@@ -106,6 +106,7 @@ import { useI18n } from 'vue-i18n'
 import TopicsIcon from '@/components/icons/IconTopic.vue'
 import TicketsIcon from '@/components/icons/IconTicket.vue'
 import ExamIcon from '@/components/icons/IconExam.vue'
+import BookMarkedIcon from '@/components/icons/IconBookMark.vue'
 const router = useRouter()
 const userStore = useUserStore()
 const examStore = useExamStore()
@@ -163,6 +164,13 @@ const cards = [
         btnText: 'dashboard.cards.exam.btn',
         route: '/exam',
         isExam: true,
+    },
+    {
+        icon: BookMarkedIcon,
+        title: 'dashboard.cards.savedQuestions.title',
+        desc: 'dashboard.cards.savedQuestions.desc',
+        btnText: 'dashboard.cards.savedQuestions.btn',
+        route: '/saved-questions',
     },
 ]
 

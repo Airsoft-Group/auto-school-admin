@@ -108,7 +108,7 @@ const ruleForm = reactive({
 const pagination = reactive({
     total: 0,
     page: 1,
-    limit: 20,
+    limit: 10000,
     lastPage: 1,
 })
 

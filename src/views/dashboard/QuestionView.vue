@@ -169,11 +169,11 @@
                     </el-form-item>
 
                     <el-form-item label="Question (Kirill)" prop="title.uz">
-                        <el-input type="textarea" v-model="ruleForm.title.uz" placeholder="Tarjima (Kirill)" :rows="4" readonly />
+                        <el-input type="textarea" v-model="ruleForm.title.uz" placeholder="Tarjima (Kirill)" :rows="4" />
                     </el-form-item>
 
                     <el-form-item label="Question (Ruscha)" prop="title.ru">
-                        <el-input type="textarea" v-model="ruleForm.title.ru" placeholder="Tarjima (Ruscha)" :rows="4" readonly />
+                        <el-input type="textarea" v-model="ruleForm.title.ru" placeholder="Tarjima (Ruscha)" :rows="4" />
                     </el-form-item>
                     <el-form-item label="Info (O‘zbekcha)" prop="info.oz" class="relative">
                         <el-mention type="textarea" v-model="ruleForm.info.oz" placeholder="Tarjima (Uzbek)" />
@@ -259,7 +259,7 @@ const router = useRouter()
 const editingId = ref<string | null>(null)
 const filters = reactive({
     page: 1,
-    limit: 10,
+    limit: 10000,
     search: undefined as any,
     subjectId: undefined as any,
     ticketId: undefined as any,
@@ -468,10 +468,10 @@ onMounted(() => {
     fetchQuestions()
 
     if (!ticketStore.getTicketSelect.length) {
-        ticketStore.fetchTickets({ page: 1, limit: 100 } as any)
+        ticketStore.fetchTickets({ page: 1, limit: 10000 } as any)
     }
     if (!subjectStore.getSubjectSelect.length) {
-        subjectStore.fetchSubjects({ page: 1, limit: 100 } as any)
+        subjectStore.fetchSubjects({ page: 1, limit: 10000 } as any)
     }
 })
 </script>
