@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] h-full md:h-[calc(100vh-61px)]">
+    <div class="p-6 test h-full md:h-[calc(100vh-61px)]">
         <!-- Loading -->
         <div v-if="loading" class="p-6">
             <el-skeleton :rows="5" animated />
@@ -59,13 +59,22 @@
                     <el-tag :type="getTimerType()" size="large" class="!text-base !text-[#0061FF] !font-semibold">
                         ⏱ {{ formatTime(timeLeft) }}
                     </el-tag>
+                    <button
+                        class="text-white hover:text-yellow-300 transition-colors"
+                        :class="currentQuestion?.isSaved ? 'text-yellow-300' : 'text-white'"
+                        @click="saveQuestion(currentQuestion?.id)"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 2a2 2 0 0 0-2 2v18l8-4 8 4V4a2 2 0 0 0-2-2H6z" />
+                        </svg>
+                    </button>
                     <el-button type="success" size="large" class="flex-1 w-full !ml-0 md:mt-0 !bg-[#18BB49] !border-none" @click="finishExam">
                         {{ t('test.finish_exam') }}
                     </el-button>
                 </div>
             </div>
 
-            <div class="border-white bg-[#FF2D55] p-5 rounded-lg shadow-sm border mb-4">
+            <div class="border-white bg-[#053ea9] p-5 rounded-lg shadow-sm border mb-4">
                 <p class="text-white font-bold text-lg mb-4">
                     {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
                 </p>
@@ -76,14 +85,15 @@
                         <div
                             v-for="(option, i) in currentQuestion?.answers || []"
                             :key="option.id"
-                            class="flex items-center gap-3 border rounded-lg px-4 py-3 transition-all cursor-pointer"
+                            class="flex items-center gap-3 border rounded-lg transition-all cursor-pointer"
                             :class="answerClass(option.id)"
                             @click="selectAnswer(option.id)"
                         >
-                            <span class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] h-[40px] flex items-center justify-center"
+                            <span
+                                class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] self-stretch flex items-center justify-center rounded-tl-lg rounded-bl-lg"
                                 >F{{ i + 1 }}.</span
                             >
-                            <span class="text-white">{{ option.title?.[lang] }}</span>
+                            <span class="text-white px-4 py-3">{{ option.title?.[lang] }}</span>
                         </div>
                     </div>
                     <el-button v-if="currentQuestion?.info" type="info" class="cursor-pointer" @click="openModal = true">Info</el-button>
@@ -111,7 +121,7 @@
                             <button
                                 v-for="(_, index) in Array(totalQuestions)"
                                 :key="index"
-                                class="w-10 h-10 rounded-full font-semibold transition-all border-2"
+                                class="w-10 h-10 rounded font-semibold transition-all border-2"
                                 :class="getPaginationButtonClass(index)"
                                 @click="handlePageChange(index + 1)"
                             >
@@ -185,6 +195,23 @@ const finishExam = async () => {
         ElMessage.error(t('test.result_submission_failed'))
     }
 }
+
+const saveQuestion = async (id: string | undefined) => {
+    if (!id) return
+    const question = exam.value?.questions.find((q) => q.id === id)
+    if (!question) return
+    try {
+        const response = await questionStore.savedQuestions({ questionId: id })
+        question.isSaved = response.data?.isSaved ?? !question.isSaved
+        if (question.isSaved) {
+            ElMessage.success('Savol saqlandi!')
+        } else {
+            ElMessage.info('Savol saqlashdan olib tashlandi')
+        }
+    } catch (err) {
+        ElMessage.error('Saqlashda xatolik!')
+    }
+}
 const goToTopics = () => {
     router.push('/topics')
 }
@@ -236,7 +263,7 @@ const answerClass = (answerId: string): string => {
         return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
-    return 'border-gray-200 cursor-pointer hover:border-blue-300 hover:shadow-md'
+    return 'border-gray-200 bg-[#326CFF1A] cursor-pointer hover:border-blue-300 hover:shadow-md'
 }
 
 const getPaginationButtonClass = (index: number): string => {
@@ -325,5 +352,11 @@ button {
 
 button:disabled {
     cursor: not-allowed;
+}
+.test {
+    background-image: url('@/assets/images/hero.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 </style>
