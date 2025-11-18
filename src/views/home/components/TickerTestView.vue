@@ -59,7 +59,11 @@
                     <el-tag :type="getTimerType()" size="large" class="!text-base !text-[#0061FF] !font-semibold">
                         ⏱ {{ formatTime(timeLeft) }}
                     </el-tag>
-                    <button class="text-white hover:text-yellow-300 transition-colors" @click="saveQuestion(currentQuestion?.id)" title="Saqlash">
+                    <button
+                        class="text-white hover:text-yellow-300 transition-colors"
+                        :class="currentQuestion?.isSaved ? 'text-yellow-300' : 'text-white'"
+                        @click="saveQuestion(currentQuestion?.id)"
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M6 2a2 2 0 0 0-2 2v18l8-4 8 4V4a2 2 0 0 0-2-2H6z" />
                         </svg>
@@ -191,9 +195,16 @@ const finishExam = async () => {
 
 const saveQuestion = async (id: string | undefined) => {
     if (!id) return
+    const question = ticket.value?.questions.find((q) => q.id === id)
+    if (!question) return
     try {
-        await questionStore.savedQuestions({ questionId: id })
-        ElMessage.success('Savol saqlandi!')
+        const response = await questionStore.savedQuestions({ questionId: id })
+        question.isSaved = response.data?.isSaved ?? !question.isSaved
+        if (question.isSaved) {
+            ElMessage.success('Savol saqlandi!')
+        } else {
+            ElMessage.info('Savol saqlashdan olib tashlandi')
+        }
     } catch (err) {
         ElMessage.error('Saqlashda xatolik!')
     }

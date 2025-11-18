@@ -105,8 +105,11 @@ export const useQuestionStore = defineStore('question', {
             this.savedQuestion = res
         },
         async savedQuestions(data: { questionId: string }) {
-            return request.post(`/v1/saved-questions`, data)
+            return request.post(`/v1/saved-questions/upsert`, data)
         },
+        // async savedQuestionDelete(id: string) {
+        //     return request.delete(`/v1/saved-questions/${id}`)
+        // },
         // async viewPassword(id: string) {
         //     const response = await request.get(`/v1/users/${id}/password`)
         //     this.password = response

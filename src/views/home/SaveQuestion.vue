@@ -27,7 +27,7 @@
             <p class="text-gray-500 text-sm mt-1">{{ t('app.no_save_data_2') }}</p>
         </div>
         <div v-else>
-            <div v-for="(item, index) in savedQuestions?.data" :key="item.id" class="p-5 border rounded-xl shadow-sm bg-white">
+            <div v-for="(item, index) in savedQuestions?.data" :key="item.id" class="p-5 border rounded-xl shadow-sm bg-white mb-3">
                 <div class="mb-4">
                     <p class="text-[#] font-bold text-lg mb-4">{{ index + 1 }}. {{ item.question?.title?.[lang] || 'Savol yuklanmoqda...' }}</p>
                 </div>

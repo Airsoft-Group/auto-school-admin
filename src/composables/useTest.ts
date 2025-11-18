@@ -11,6 +11,7 @@ export interface Question {
     id: string
     title: { [key: string]: string }
     answers: Answer[]
+    isSaved: boolean
     file?: {
         path: string
         name?: string
