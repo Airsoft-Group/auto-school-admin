@@ -37,12 +37,13 @@
                             <div
                                 v-for="(option, i) in item.question?.answers || []"
                                 :key="option.id"
-                                class="flex items-center gap-3 border rounded-lg px-4 py-3 transition-all cursor-pointer"
+                                class="flex items-center gap-3 border rounded-lg transition-all cursor-pointer"
                             >
-                                <span class="font-semibold min-w-[40px] bg-[#0061FF] w-[40px] h-[40px] flex items-center text-white justify-center"
+                                <span
+                                    class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] self-stretch flex items-center justify-center rounded-tl-lg rounded-bl-lg"
                                     >F{{ i + 1 }}.</span
                                 >
-                                <span class="">{{ option.title?.[lang] }}</span>
+                                <span class="px-4 py-3">{{ option.title?.[lang] }}</span>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] h-full md:h-[calc(100vh-61px)]">
+    <div class="p-6 h-full md:h-[calc(100vh-61px)] test">
         <!-- Loading -->
         <div v-if="loading" class="p-6">
             <el-skeleton :rows="5" animated />
@@ -74,8 +74,8 @@
                 </div>
             </div>
 
-            <div class="border-white bg-[#FF2D55] p-5 rounded-lg shadow-sm border mb-4">
-                <p class="text-white font-bold text-lg mb-4">
+            <div class="border-white bg-[#053ea9] p-5 rounded-lg shadow-sm border mb-4">
+                <p class="text-white font-bold text-lg">
                     {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
                 </p>
             </div>
@@ -85,14 +85,15 @@
                         <div
                             v-for="(option, i) in currentQuestion?.answers || []"
                             :key="option.id"
-                            class="flex items-center gap-3 border rounded-lg px-4 py-3 transition-all cursor-pointer"
+                            class="flex items-center gap-3 border rounded-lg transition-all cursor-pointer"
                             :class="answerClass(option.id)"
                             @click="selectAnswer(option.id)"
                         >
-                            <span class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] h-[40px] flex items-center justify-center"
+                            <span
+                                class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] self-stretch flex items-center justify-center rounded-tl-lg rounded-bl-lg"
                                 >F{{ i + 1 }}.</span
                             >
-                            <span class="text-white">{{ option.title?.[lang] }}</span>
+                            <span class="text-white px-4 py-3">{{ option.title?.[lang] }}</span>
                         </div>
                     </div>
                     <el-button v-if="currentQuestion?.info" type="info" class="cursor-pointer" @click="openModal = true">Info</el-button>
@@ -120,7 +121,7 @@
                             <button
                                 v-for="(_, index) in Array(totalQuestions)"
                                 :key="index"
-                                class="w-10 h-10 rounded-full font-semibold transition-all border-2"
+                                class="w-10 h-10 rounded font-semibold transition-all border-2"
                                 :class="getPaginationButtonClass(index)"
                                 @click="handlePageChange(index + 1)"
                             >
@@ -142,7 +143,7 @@
 import { useExam } from '@/composables'
 import { useQuestionStore } from '@/stores/questions'
 import DefaultImage from '@/assets/images/default-image.svg'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
@@ -260,7 +261,7 @@ const answerClass = (answerId: string): string => {
         return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
-    return 'border-gray-200 cursor-pointer hover:border-blue-300 hover:shadow-md'
+    return 'border-gray-200 bg-[#326CFF1A] cursor-pointer hover:border-blue-300 hover:shadow-md'
 }
 
 const getPaginationButtonClass = (index: number): string => {
@@ -337,6 +338,7 @@ onMounted(async () => {
         loading.value = false
     }
 })
+
 onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeyPress)
     ticket.value?.cleanup()
@@ -349,5 +351,11 @@ button {
 
 button:disabled {
     cursor: not-allowed;
+}
+.test {
+    background-image: url('@/assets/images/hero.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 </style>
