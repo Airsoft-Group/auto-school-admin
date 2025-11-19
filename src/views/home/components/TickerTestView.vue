@@ -143,7 +143,7 @@
 import { useExam } from '@/composables'
 import { useQuestionStore } from '@/stores/questions'
 import DefaultImage from '@/assets/images/default-image.svg'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'

@@ -33,6 +33,7 @@ export interface UserAnswer {
     isCorrect: boolean | null
 }
 
+// ExamState interface'ini yangilash kerak
 interface ExamState {
     currentIndex: number
     currentPage: number
@@ -43,16 +44,38 @@ interface ExamState {
     timestamp: number
     questionIds: string[]
     examType: ExamType
+    questionSlots?: [number, Question][] // Savollarni saqlash
 }
 
 export function useExam(questionsData: Question[], examType: ExamType = 'ticket', examId?: string, sessionId?: string, timeLimitMinutes?: number) {
     const examStore = useExamStore()
 
     const questionLimit = examType === 'ticket' ? 20 : questionsData.length
-    const questions = ref<Question[]>(questionsData?.slice(0, questionLimit) || [])
     const examTypeRef = ref<ExamType>(examType)
     const sessionIdRef = ref<string>(sessionId || '')
-    const STORAGE_KEY = `exam_state_${examType}_${questions.value[0]?.id || 'default'}`
+
+    // Barcha mavjud savollar
+    const allQuestions = ref<Question[]>(questionsData || [])
+
+    // Hozirgi test uchun tanlangan savollar
+    const questions = ref<Question[]>([])
+
+    // Har bir index uchun tanlangan savollarni saqlash
+    const questionSlots = ref<Map<number, Question>>(new Map())
+
+    const STORAGE_KEY = `exam_state_${examType}_${allQuestions.value[0]?.id || 'default'}`
+
+    // Boshlang'ich savollarni yuklash
+    const initializeQuestions = () => {
+        const shuffled = [...allQuestions.value].sort(() => Math.random() - 0.5)
+        const selected = shuffled.slice(0, questionLimit)
+
+        selected.forEach((question, index) => {
+            questionSlots.value.set(index, question)
+        })
+
+        questions.value = Array.from(questionSlots.value.values())
+    }
 
     const loadState = (): ExamState | null => {
         try {
@@ -66,17 +89,10 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
                 return null
             }
 
-            const currentQuestionIds = questions.value.map((q) => q.id)
-            const savedQuestionIds = state.questionIds || []
-
-            const isSameQuestions =
-                currentQuestionIds.length === savedQuestionIds.length && currentQuestionIds.every((id, index) => id === savedQuestionIds[index])
-
-            const isSameExamType = state.examType === examType
-
-            if (!isSameQuestions || !isSameExamType) {
-                localStorage.removeItem(STORAGE_KEY)
-                return null
+            // Saqlangan savollarni qayta yuklash
+            if (state.questionSlots) {
+                questionSlots.value = new Map(state.questionSlots)
+                questions.value = Array.from(questionSlots.value.values())
             }
 
             return state
@@ -86,8 +102,14 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
             return null
         }
     }
+
     const totalSeconds = (timeLimitMinutes ?? 60) * 60
     const savedState = loadState()
+
+    // Agar saqlangan holat bo'lmasa, yangi savollarni yuklash
+    if (!savedState) {
+        initializeQuestions()
+    }
 
     const currentIndex = ref(savedState?.currentIndex ?? 0)
     const currentPage = ref(savedState?.currentPage ?? 1)
@@ -116,6 +138,7 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
                 timestamp: Date.now(),
                 questionIds: questions.value.map((q) => q.id),
                 examType: examTypeRef.value,
+                questionSlots: Array.from(questionSlots.value.entries()),
             }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
         } catch (error) {
@@ -124,7 +147,7 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
     }
 
     watch(
-        [currentIndex, currentPage, selectedAnswer, timeLeft, finished, userAnswers],
+        [currentIndex, currentPage, selectedAnswer, timeLeft, finished, userAnswers, questionSlots],
         () => {
             saveState()
         },
@@ -132,8 +155,8 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
     )
 
     const currentQuestion = computed(() => {
-        if (!Array.isArray(questions.value) || questions.value.length === 0) return null
-        return questions.value[currentIndex.value] ?? null
+        const question = questionSlots.value.get(currentIndex.value)
+        return question ?? null
     })
 
     const score = computed(() => {
@@ -144,7 +167,7 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         return correct
     })
 
-    const totalQuestions = computed(() => questions.value.length)
+    const totalQuestions = computed(() => questionSlots.value.size)
 
     const isCurrentQuestionAnswered = computed(() => {
         return userAnswers.value.has(currentIndex.value)
@@ -173,6 +196,25 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         selectedAnswer.value = answerId
     }
 
+    function getRandomQuestion(currentIndex: number): Question {
+        const oldQuestion = questionSlots.value.get(currentIndex)
+        const usedIds = Array.from(questionSlots.value.values()).map((q) => q.id)
+        let available = allQuestions.value.filter((q) => !usedIds.includes(q.id))
+
+        if (available.length === 0) {
+            available = allQuestions.value.filter((q) => q.id !== oldQuestion?.id)
+        }
+
+        if (available.length === 0) {
+            return oldQuestion || allQuestions.value[0]
+        }
+
+        const randomIndex = Math.floor(Math.random() * available.length)
+        const newQuestion = available[randomIndex]
+
+        return newQuestion
+    }
+
     function nextQuestion() {
         if (currentQuestion.value && selectedAnswer.value) {
             const answer = currentQuestion.value.answers.find((a) => a.id === selectedAnswer.value)
@@ -184,7 +226,7 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
             })
         }
 
-        if (currentIndex.value < questions.value.length - 1) {
+        if (currentIndex.value < questionLimit - 1) {
             currentIndex.value++
             currentPage.value = currentIndex.value + 1
 
@@ -260,21 +302,49 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
         currentPage.value = 1
         selectedAnswer.value = null
         finished.value = false
-        timeLeft.value = 3600
+        timeLeft.value = totalSeconds
         userAnswers.value.clear()
+        questionSlots.value.clear()
 
         localStorage.removeItem(STORAGE_KEY)
+
+        // Yangi savollarni yuklash
+        initializeQuestions()
 
         startTimer()
     }
 
     function jumpToQuestion(index: number) {
-        if (index >= 0 && index < questions.value.length) {
+        if (index >= 0 && index < questionLimit) {
+            console.log('📍 Jumping to index:', index)
+
+            // Agar bu savolga javob berilgan bo'lsa
+            const isAnswered = userAnswers.value.has(index)
+
+            if (isAnswered) {
+                console.log('✅ Question already answered - keeping same question')
+                // Javob berilgan bo'lsa, saqlangan javobni ko'rsatish
+                const savedAnswer = userAnswers.value.get(index)
+                selectedAnswer.value = savedAnswer?.answerId || null
+            } else {
+                console.log('🔄 Question not answered - loading random question')
+                // Javob berilmagan bo'lsa, random savol ko'rsatish
+                const randomQuestion = getRandomQuestion(index)
+
+                // Vue reactivity uchun yangi Map yaratish
+                const newSlots = new Map(questionSlots.value)
+                newSlots.set(index, randomQuestion)
+                questionSlots.value = newSlots
+
+                // questions array'ni ham yangilash
+                questions.value = Array.from(questionSlots.value.values())
+
+                // Javobni tozalash
+                selectedAnswer.value = null
+            }
+
             currentIndex.value = index
             currentPage.value = index + 1
-
-            const savedAnswer = userAnswers.value.get(index)
-            selectedAnswer.value = savedAnswer?.answerId || null
         }
     }
 
