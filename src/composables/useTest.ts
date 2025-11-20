@@ -106,7 +106,6 @@ export function useExam(questionsData: Question[], examType: ExamType = 'ticket'
     const totalSeconds = (timeLimitMinutes ?? 60) * 60
     const savedState = loadState()
 
-    // Agar saqlangan holat bo'lmasa, yangi savollarni yuklash
     if (!savedState) {
         initializeQuestions()
     }
