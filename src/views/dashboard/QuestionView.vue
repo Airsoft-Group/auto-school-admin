@@ -259,7 +259,7 @@ const router = useRouter()
 const editingId = ref<string | null>(null)
 const filters = reactive({
     page: 1,
-    limit: 10000,
+    limit: 20,
     search: undefined as any,
     subjectId: undefined as any,
     ticketId: undefined as any,

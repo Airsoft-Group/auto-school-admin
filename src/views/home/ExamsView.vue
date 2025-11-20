@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 w-full bg-gradient-to-tr from-[#0061FF] to-[#3C89FF] h-full md:h-[calc(100vh-61px)]">
+    <div class="p-6 w-full test h-full md:h-[calc(100vh-61px)]">
         <div v-if="loading" class="p-6">
             <el-skeleton :rows="5" animated />
         </div>
@@ -303,5 +303,11 @@ button {
 
 button:disabled {
     cursor: not-allowed;
+}
+.test {
+    background-image: url('@/assets/images/hero.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 </style>
