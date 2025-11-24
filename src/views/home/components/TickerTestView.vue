@@ -261,7 +261,7 @@ const answerClass = (answerId: string): string => {
         return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
-    return 'border-gray-200 bg-[#326CFF1A] cursor-pointer hover:border-blue-300 hover:shadow-md'
+    return 'border-gray-200 bg-[#858585] cursor-pointer hover:border-blue-300 hover:shadow-md'
 }
 
 const getPaginationButtonClass = (index: number): string => {

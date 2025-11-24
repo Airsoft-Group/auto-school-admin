@@ -75,7 +75,7 @@
             </div>
 
             <div class="border-white bg-[#053ea9] p-5 rounded-lg shadow-sm border mb-4">
-                <p class="text-white font-bold text-lg mb-4">
+                <p class="text-white font-bold text-lg text-center">
                     {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
                 </p>
             </div>
@@ -263,7 +263,7 @@ const answerClass = (answerId: string): string => {
         return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
-    return 'border-gray-200 bg-[#326CFF1A] cursor-pointer hover:border-blue-300 hover:shadow-md'
+    return 'border-gray-200 bg-[#858585] cursor-pointer hover:border-blue-300 hover:shadow-md'
 }
 
 const getPaginationButtonClass = (index: number): string => {
