@@ -58,8 +58,8 @@
                     </el-button>
                 </div>
             </div>
-            <div class="border-white bg-[#FF2D55] p-5 rounded-lg shadow-sm border mb-4">
-                <p class="text-white font-bold text-lg mb-4">
+            <div class="border-white bg-[#053ea9] p-5 rounded-lg shadow-sm border mb-4">
+                <p class="text-white font-bold text-lg text-center">
                     {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
                 </p>
             </div>
@@ -76,7 +76,7 @@
                             <span class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] h-[40px] flex items-center justify-center"
                                 >F{{ i + 1 }}.</span
                             >
-                            <span class="text-white">{{ option.title?.[lang] }}</span>
+                            <span class="text-white text-lg">{{ option.title?.[lang] }}</span>
                         </div>
                     </div>
                     <el-button
@@ -213,7 +213,7 @@ const answerClass = (answerId: string): string => {
         return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
-    return 'border-gray-200 cursor-pointer hover:border-blue-300 hover:shadow-md'
+    return 'border-gray-200 bg-[#b6b6b6] cursor-pointer hover:border-blue-300 hover:shadow-md'
 }
 
 const getPaginationButtonClass = (index: number): string => {

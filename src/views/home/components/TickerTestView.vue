@@ -75,7 +75,7 @@
             </div>
 
             <div class="border-white bg-[#053ea9] p-5 rounded-lg shadow-sm border mb-4">
-                <p class="text-white font-bold text-lg">
+                <p class="text-white font-bold text-lg text-center">
                     {{ currentQuestion?.title?.[lang] || 'Savol yuklanmoqda...' }}
                 </p>
             </div>
@@ -93,7 +93,7 @@
                                 class="font-semibold text-white min-w-[40px] bg-[#0061FF] w-[40px] self-stretch flex items-center justify-center rounded-tl-lg rounded-bl-lg"
                                 >F{{ i + 1 }}.</span
                             >
-                            <span class="text-white px-4 py-3">{{ option.title?.[lang] }}</span>
+                            <span class="text-white px-4 py-3 text-lg">{{ option.title?.[lang] }}</span>
                         </div>
                     </div>
                     <el-button v-if="currentQuestion?.info" type="info" class="cursor-pointer" @click="openModal = true">Info</el-button>
@@ -261,7 +261,7 @@ const answerClass = (answerId: string): string => {
         return 'border-blue-500 bg-blue-500 cursor-pointer hover:shadow-md'
     }
 
-    return 'border-gray-200 bg-[#326CFF1A] cursor-pointer hover:border-blue-300 hover:shadow-md'
+    return 'border-gray-200 bg-[#b6b6b6] cursor-pointer hover:border-blue-300 hover:shadow-md'
 }
 
 const getPaginationButtonClass = (index: number): string => {
