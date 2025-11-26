@@ -27,6 +27,10 @@ export const userService = {
         return request.post('/v1/auth/refresh', data)
     },
 
+    register(data: any) {
+        return request.post('/v1/auth/register', data)
+    },
+
     /**
      * Invalidates the current session and refresh tokens
      */

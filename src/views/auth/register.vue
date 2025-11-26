@@ -5,9 +5,9 @@
             <div class="box w-full">
                 <div class="text-center mx-auto w-full max-w-[370px]">
                     <LogoIcon class="mx-auto fixed top-8 left-8 max-w-[120px]" />
-                    <h5 class="font-bold text-3xl text-primary">{{ $t('auth.login_title') }}</h5>
+                    <h5 class="font-bold text-3xl text-primary">{{ $t('auth.register_title') }}</h5>
                     <p class="text-base mb-6 mt-1 text-[#212121] opacity-50">
-                        {{ $t('auth.login_description') }}
+                        {{ $t('auth.register_description') }}
                     </p>
 
                     <el-form
@@ -20,9 +20,30 @@
                         class="!text-xs"
                     >
                         <div class="mb-4">
-                            <div class="text-left text-sm font-medium mb-1">{{ $t('auth.login_label') }}</div>
+                            <div class="text-left text-sm font-medium mb-1">{{ $t('auth.fullname_label') }}</div>
+                            <el-form-item prop="fullName" class="mb-4">
+                                <el-input v-model="ruleForm.fullName" type="text" autocomplete="off" :placeholder="$t('auth.fullname_label')" />
+                            </el-form-item>
+                        </div>
+                        <div class="mb-4">
+                            <div class="text-left text-sm font-medium mb-1">{{ $t('auth.email_label') }}</div>
                             <el-form-item prop="email" class="mb-4">
-                                <el-input v-model.trim="ruleForm.email" type="text" autocomplete="off" :placeholder="$t('auth.login_placeholder')" />
+                                <el-input v-model.trim="ruleForm.email" type="text" autocomplete="off" :placeholder="$t('auth.email_label')" />
+                            </el-form-item>
+                        </div>
+                        <div class="mb-4">
+                            <div class="text-left text-sm font-medium mb-1">{{ $t('auth.phone_label') }}</div>
+                            <el-form-item prop="phoneNumber" class="mb-4">
+                                <el-input
+                                    v-model.trim="ruleForm.phoneNumber"
+                                    type="text"
+                                    autocomplete="off"
+                                    v-mask="'+998 ## ###-##-##'"
+                                    placeholder="(00) 000 00 00"
+                                    :formatter="(value:string) => `+998 ${value}`"
+                                    :parser="(value:string) => value.replace(/\+998\s?/g, '')"
+                                    @blur="validatePhone"
+                                />
                             </el-form-item>
                         </div>
 
@@ -38,16 +59,14 @@
                                 />
                             </el-form-item>
                         </div>
-                        <router-link to="/register" class="text-primary font-bold hover:underline text-right mx-auto flex items-center justify-end">{{
-                            $t('auth.register_link')
-                        }}</router-link>
+
                         <div class="flex flex-col py-1 mt-4">
                             <el-button class="w-full" size="large" type="primary" @click="submitForm(ruleFormRef)" :loading="loading">
-                                {{ $t('auth.login_button') }}
+                                {{ $t('auth.register_button') }}
                             </el-button>
                             <div class="text-center mt-3 text-sm text-gray-600">
                                 {{ $t('auth.or_text') }}
-                                <router-link to="/" class="text-primary font-bold hover:underline">{{ $t('auth.back_to_home') }}</router-link>
+                                <router-link to="/login" class="text-primary font-bold hover:underline">{{ $t('auth.back_to_login') }}</router-link>
                             </div>
                         </div>
                     </el-form>
@@ -69,10 +88,13 @@ const store = useUserStore()
 const router = useRouter()
 const ruleFormRef = ref<FormInstance>()
 const { t } = useI18n()
+const phoneError = ref('')
 // Form data matching our new LoginRequest type
 const ruleForm = reactive({
     email: '',
     password: '',
+    fullName: '',
+    phoneNumber: '',
 })
 
 // Form validation rules
@@ -82,6 +104,27 @@ const rules = reactive<FormRules>({
             required: true,
             message: t('validation.email_required'),
             trigger: 'blur',
+        },
+    ],
+    fullName: [
+        {
+            required: true,
+            message: t('validation.fillField'),
+            trigger: 'blur',
+        },
+    ],
+    phoneNumber: [
+        {
+            required: true,
+            message: t('validation.fillField'),
+            trigger: ['blur'],
+        },
+        {
+            type: 'string',
+            required: true,
+            pattern: /^\d{2}\s\d{3}-\d{2}-\d{2}$/,
+            message: t('validation.pattern'),
+            trigger: ['blur'],
         },
     ],
     password: [
@@ -97,7 +140,17 @@ const rules = reactive<FormRules>({
         },
     ],
 })
+const validPrefixes = ['90', '91', '93', '94', '95', '97', '98', '99', '33', '50', '55', '77', '88', '20']
+const validatePhone = () => {
+    phoneError.value = ''
 
+    const phone = ruleForm.phoneNumber.replaceAll(/\D/g, '')
+    if (phone.length < 9) return
+    const prefix = phone.substring(0, 2)
+    if (!validPrefixes.includes(prefix)) {
+        phoneError.value = t('validation.invalidPrefix')
+    }
+}
 const loading = ref(false)
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -107,21 +160,18 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         if (valid) {
             try {
                 loading.value = true
-                const response = await store.login({
+                const response = await store.register({
                     email: ruleForm.email,
                     password: ruleForm.password,
+                    fullName: ruleForm.fullName,
+                    phoneNumber: ruleForm.phoneNumber.replace(/\s|-/g, ''),
                 })
                 if (response.success) {
-                    await store.fetchUserInfo()
                     ElMessage({
                         message: t('messages.login_success'),
                         type: 'success',
                     })
-                    if (store.getUser?.role === 'super_admin') {
-                        router.push('/admin/dashboard')
-                    } else {
-                        router.push('/')
-                    }
+                    router.push('/login')
                 } else {
                     // Handle API error response format
                     const errorMessage = response.message || response.error?.details || t('messages.login_error')

@@ -89,17 +89,29 @@
         "login_description": "Tizimga kirish uchun login va parolingizni kiriting.",
         "login_label": "Login",
         "password_label": "Parol",
+        "phone_label": "Telefon raqam",
+        "email_label": "Elektron pochta",
         "login_placeholder": "Loginingizni kiriting",
+        "fullname_label": "Ism va familiya kiriting",
         "password_placeholder": "Parolingizni kiriting",
         "login_button": "Kirish",
         "back_to_home": "Asosiy sahifaga qaytish",
+        "back_to_login": "Login sahifasiga qaytish",
         "or_text": "yoki",
-        "home": "Asosiy sahifa"
+        "home": "Asosiy sahifa",
+        "register_link": "Ro‘yxatdan o‘tish",
+        "register_title": "Ro‘yxatdan o‘tish",
+        "register_button": "Ro‘yxatdan o‘tish",
+        "register_description": "Yangi akkaunt yaratish uchun ma’lumotlaringizni kiriting."
     },
     "validation": {
         "email_required": "Iltimos, loginni kiriting",
         "password_required": "Iltimos, parolni kiriting",
-        "password_min": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak"
+        "password_min": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak",
+        "fullName_required": "Iltimos, ism va familiyangizni kiriting",
+        "invalidPrefix": "Bu telefon raqam prefiksi qo‘llab-quvvatlanmaydi.",
+        "fillField": "Iltimos, ushbu maydonni to‘ldiring.",
+        "pattern": "To‘g‘ri formatda kiriting."
     },
     "messages": {
         "login_success": "Tizimga muvaffaqiyatli kirdingiz",
