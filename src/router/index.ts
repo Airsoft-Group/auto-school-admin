@@ -57,6 +57,12 @@ const router = createRouter({
             meta: { isPublic: true },
         },
         {
+            path: '/register',
+            name: 'register',
+            component: () => import('../views/auth/register.vue'),
+            meta: { isPublic: true },
+        },
+        {
             path: '/admin',
             component: () => import('../layouts/DashboardLayout.vue'),
             children: [

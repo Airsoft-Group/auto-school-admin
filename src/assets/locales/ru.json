@@ -89,16 +89,28 @@
         "login_description": "Введите свой логин и пароль для входа в систему.",
         "login_label": "Логин",
         "password_label": "Пароль",
+        "phone_label": "Номер телефона",
+        "email_label": "Электронная почта",
+        "fullname_label": "Имя и фамилия",
         "login_placeholder": "Введите ваш логин",
         "password_placeholder": "Введите ваш пароль",
         "login_button": "Войти",
         "back_to_home": "Вернуться на главную страницу",
-        "or_text": "или"
+        "or_text": "или",
+        "back_to_login": "Вернуться на страницу входа",
+        "register_link": "Регистрация",
+        "register_title": "Регистрация",
+        "register_button": "Зарегистрироваться",
+        "register_description": "Введите свои данные, чтобы создать новый аккаунт."
     },
     "validation": {
         "email_required": "Пожалуйста, введите логин",
         "password_required": "Пожалуйста, введите пароль",
-        "password_min": "Пароль должен содержать не менее 6 символов"
+        "password_min": "Пароль должен содержать не менее 6 символов",
+        "fullName_required": "Пожалуйста, введите имя и фамилия ",
+        "invalidPrefix": "Этот префикс номера не поддерживается.",
+        "fillField": "Пожалуйста, заполните это поле.",
+        "pattern": "Введите в правильном формате."
     },
     "messages": {
         "login_success": "Вы успешно вошли в систему",

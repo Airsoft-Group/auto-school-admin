@@ -7,7 +7,7 @@ import {
     getRefreshToken,
     setRefreshToken,
     setUserInfo,
-    removeUserInfo
+    removeUserInfo,
 } from '../utils/cookies'
 import userService from '../services/modules/user.service'
 import { LoginRequest } from '../types/server/user.types'
@@ -16,8 +16,8 @@ import { UserProfileResponse } from '@/types/server/user.types'
 interface UserState {
     token?: string
     refresh_token?: string
-    user: UserProfileResponse['data'] | null,
-    screenSplit: boolean,
+    user: UserProfileResponse['data'] | null
+    screenSplit: boolean
 }
 
 export const useUserStore = defineStore('user', {
@@ -29,29 +29,32 @@ export const useUserStore = defineStore('user', {
     }),
     actions: {
         async login(data: LoginRequest) {
-            const response = await userService.login(data);
+            const response = await userService.login(data)
             if (response.success && response.data) {
-                this.setTokens(response.data.accessToken, response.data.refreshToken);
+                this.setTokens(response.data.accessToken, response.data.refreshToken)
             }
-            return response;
+            return response
+        },
+        async register(data: { fullName: string; password: string; email: string; phoneNumber: string }) {
+            return await userService.register(data)
         },
         async fetchUserInfo() {
-            const response = await userService.getCurrentUser();
+            const response = await userService.getCurrentUser()
             if (response.success && response.data) {
-                this.user = response.data;
-                setUserInfo(response.data);
+                this.user = response.data
+                setUserInfo(response.data)
             }
-            return response;
+            return response
         },
         async refreshToken() {
             const response = await userService.refreshToken({
-                refresh_token: this.refresh_token || getRefreshToken() || ''
-            });
+                refresh_token: this.refresh_token || getRefreshToken() || '',
+            })
             if (response.success && response.data) {
-                this.setTokens(response.data.accessToken, response.data.refreshToken);
+                this.setTokens(response.data.accessToken, response.data.refreshToken)
             }
 
-            return response;
+            return response
         },
         setTokens(accessToken: string, refreshToken: string) {
             this.token = accessToken
@@ -60,23 +63,23 @@ export const useUserStore = defineStore('user', {
             setRefreshToken(refreshToken)
         },
         resetToken() {
-            removeAccessToken();
-            removeRefreshToken();
+            removeAccessToken()
+            removeRefreshToken()
             removeUserInfo()
-            this.token = '';
-            this.refresh_token = '';
-            this.user = null;
+            this.token = ''
+            this.refresh_token = ''
+            this.user = null
         },
         async logout() {
-            const response = await userService.logout();
+            const response = await userService.logout()
             if (response.success) {
-                this.resetToken();
+                this.resetToken()
             }
-            return response;
+            return response
         },
     },
     getters: {
         getUser: (state) => state.user,
         getToken: (state) => state.token,
     },
-});
+})
