@@ -6,9 +6,9 @@ import { ApiResponse } from '@/types'
 export interface Users {
     id?: string
     fullName: string
-    email: string
     role?: string
     password?: string
+    phoneNumber: string
     accessStartAt: string
     accessEndAt: string
 }

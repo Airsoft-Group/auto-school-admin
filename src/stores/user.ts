@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', {
             }
             return response
         },
-        async register(data: { fullName: string; password: string; email: string; phoneNumber: string }) {
+        async register(data: { fullName: string; password: string; phoneNumber: string }) {
             return await userService.register(data)
         },
         async fetchUserInfo() {
