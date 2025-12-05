@@ -159,7 +159,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                         router.push('/')
                     }
                 } else {
-                    // Handle API error response format
                     const errorMessage = response.message || response.error?.details || t('messages.login_error')
                     ElMessage({
                         message: errorMessage,
@@ -167,16 +166,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     })
                 }
             } catch (error: any) {
-                // Extract error message from Axios error response format
-                // const errorResponse = error.response?.data
-                // const errorMessage = errorResponse?.message ||
-                //                   (errorResponse?.error?.details) ||
-                //                   error.message ||
-                //                   `Login yoki parol noto'g'ri`
-                // ElMessage({
-                //     message: errorMessage,
-                //     type: 'error',
-                // })
+                const errorResponse = error.response?.data
+                const errorMessage = errorResponse?.message || errorResponse?.error?.details || error.message || `Login yoki parol noto'g'ri`
+                ElMessage({
+                    message: errorMessage,
+                    type: 'error',
+                })
             } finally {
                 loading.value = false
             }
