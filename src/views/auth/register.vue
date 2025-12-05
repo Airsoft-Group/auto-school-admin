@@ -156,7 +156,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 const response = await store.register({
                     password: ruleForm.password,
                     fullName: ruleForm.fullName,
-                    phoneNumber: ruleForm.phoneNumber.replace(/\s|-/g, ''),
+                    phoneNumber: '+998' + ruleForm.phoneNumber.replace(/\s|-/g, ''),
                 })
                 if (response.success) {
                     ElMessage({

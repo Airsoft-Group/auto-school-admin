@@ -11,7 +11,11 @@
             <el-table-column type="index" label="№" width="80" align="center" />
             <el-table-column prop="fullName" label="Name" min-width="200" />
             <el-table-column prop="role" label="Role" min-width="200" />
-            <el-table-column prop="phoneNumber" label="Phone" min-width="220" />
+            <el-table-column prop="phoneNumber" label="Phone" min-width="220">
+                <template #default="{ row }">
+                    {{ row.phoneNumber.replace(/\s|-/g, '') }}
+                </template>
+            </el-table-column>
             <el-table-column prop="accessStartAt" label="Access start" min-width="220">
                 <template #default="{ row }">
                     {{ dayjs(row.accessStartAt).format('YYYY-MM-DD') }}
@@ -256,14 +260,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 if (isEditing.value && editingId.value) {
                     await usersStore.updateUser(editingId.value, {
                         fullName: ruleForm.fullName,
-                        phoneNumber: ruleForm.phoneNumber.replace(/\s|-/g, ''),
+                        phoneNumber: '+998' + ruleForm.phoneNumber.replace(/\s|-/g, ''),
                         password: ruleForm.password,
                         accessStartAt: ruleForm.accessStartAt,
                         accessEndAt: ruleForm.accessEndAt,
                     })
                     ElMessage.success('User updated successfully')
                 } else {
-                    await usersStore.createUser({ ...ruleForm })
+                    await usersStore.createUser({
+                        fullName: ruleForm.fullName,
+                        phoneNumber: '+998' + ruleForm.phoneNumber.replace(/\s|-/g, ''),
+                        password: ruleForm.password,
+                        accessStartAt: ruleForm.accessStartAt,
+                        accessEndAt: ruleForm.accessEndAt,
+                    })
                     ElMessage.success('User created successfully')
                 }
 
