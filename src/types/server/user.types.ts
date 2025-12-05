@@ -1,5 +1,5 @@
 export interface LoginRequest {
-    email: string
+    phoneNumber: string
     password: string
 }
 
@@ -30,6 +30,7 @@ export interface UserProfileResponse {
         fullName: string
         email: string
         role: string
+        phoneNumber: string
         permissions: string[]
     } | null
     error: any

@@ -45,7 +45,7 @@ export default function roleGuard(to: RouteLocationNormalized, from: RouteLocati
         duration: 4000,
     })
 
-    if (userRole === 'super_admin') {
+    if (userRole === 'super_admin' || userRole === 'admin') {
         next('/admin/dashboard')
     } else {
         next('/')

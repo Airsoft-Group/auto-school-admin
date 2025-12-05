@@ -11,7 +11,7 @@
             <el-table-column type="index" label="№" width="80" align="center" />
             <el-table-column prop="fullName" label="Name" min-width="200" />
             <el-table-column prop="role" label="Role" min-width="200" />
-            <el-table-column prop="email" label="Email" min-width="220" />
+            <el-table-column prop="phoneNumber" label="Phone" min-width="220" />
             <el-table-column prop="accessStartAt" label="Access start" min-width="220">
                 <template #default="{ row }">
                     {{ dayjs(row.accessStartAt).format('YYYY-MM-DD') }}
@@ -71,8 +71,18 @@
                     <el-form-item label="Name" prop="fullName">
                         <el-input v-model="ruleForm.fullName" placeholder="Enter fullname" />
                     </el-form-item>
-                    <el-form-item label="Email" prop="email">
-                        <el-input v-model="ruleForm.email" placeholder="Enter email" />
+                    <el-form-item label="Phone number" prop="phoneNumber">
+                        <el-input
+                            v-model.trim="ruleForm.phoneNumber"
+                            type="text"
+                            autocomplete="off"
+                            v-mask="'+998 ## ###-##-##'"
+                            placeholder="(00) 000 00 00"
+                            class="!h-[44px]"
+                            :formatter="(value:string) => `+998 ${value}`"
+                            :parser="(value:string) => value.replace(/\+998\s?/g, '')"
+                            @blur="validatePhone"
+                        />
                     </el-form-item>
                     <el-form-item label="Password" prop="password">
                         <el-input v-model="ruleForm.password" placeholder="Enter password" />
@@ -115,7 +125,8 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { dayjs, ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus'
 import { useUserManagementStore } from '@/stores'
 import { DeleteFilled, EditPen, View } from '@element-plus/icons-vue'
-
+import { useI18n } from 'vue-i18n'
+const i18n = useI18n()
 const usersStore = useUserManagementStore()
 const users = computed(() => usersStore.users)
 const viewPassword = computed(() => usersStore.password)
@@ -125,14 +136,25 @@ const isEditing = ref(false)
 const ruleFormRef = ref<FormInstance>()
 const editingId = ref<string | null>(null)
 const maskPassword = (password: string) => '•'.repeat(8)
+const phoneError = ref('')
 const ruleForm = reactive({
     fullName: '',
-    email: '',
+    phoneNumber: '',
     password: '',
     accessStartAt: '',
     accessEndAt: '',
 })
+const validPrefixes = ['90', '91', '93', '94', '95', '97', '98', '99', '33', '50', '55', '77', '88', '20']
+const validatePhone = () => {
+    phoneError.value = ''
 
+    const phone = ruleForm.phoneNumber.replaceAll(/\D/g, '')
+    if (phone.length < 9) return
+    const prefix = phone.substring(0, 2)
+    if (!validPrefixes.includes(prefix)) {
+        phoneError.value = i18n.t('validation.invalidPrefix')
+    }
+}
 const validateEndDate = (rule: any, value: string, callback: any) => {
     if (!value) {
         return callback(new Error('To date is required'))
@@ -145,9 +167,19 @@ const validateEndDate = (rule: any, value: string, callback: any) => {
 
 const rules = reactive<FormRules>({
     fullName: [{ required: true, message: 'Name is required', trigger: 'blur' }],
-    email: [
-        { required: true, message: 'Email is required', trigger: 'blur' },
-        { type: 'email', message: 'Invalid email format', trigger: ['blur', 'change'] },
+    phoneNumber: [
+        {
+            required: true,
+            message: i18n.t('validation.fillField'),
+            trigger: ['blur'],
+        },
+        {
+            type: 'string',
+            required: true,
+            pattern: /^\d{2}\s\d{3}-\d{2}-\d{2}$/,
+            message: i18n.t('validation.pattern'),
+            trigger: ['blur'],
+        },
     ],
     password: [
         { required: true, message: 'Password is required', trigger: 'blur' },
@@ -197,7 +229,7 @@ function openEditModal(user: any) {
     editingId.value = user.id ?? null
     Object.assign(ruleForm, {
         fullName: user.fullName,
-        email: user.email,
+        phoneNumber: user.phoneNumber,
         password: '',
         accessStartAt: user.accessStartAt || '',
         accessEndAt: user.accessEndAt || '',
@@ -207,7 +239,7 @@ function openEditModal(user: any) {
 
 function resetForm() {
     ruleForm.fullName = ''
-    ruleForm.email = ''
+    ruleForm.phoneNumber = ''
     ruleForm.password = ''
     ruleForm.accessEndAt = ''
     ruleForm.accessStartAt = ''
@@ -224,7 +256,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 if (isEditing.value && editingId.value) {
                     await usersStore.updateUser(editingId.value, {
                         fullName: ruleForm.fullName,
-                        email: ruleForm.email,
+                        phoneNumber: ruleForm.phoneNumber.replace(/\s|-/g, ''),
                         password: ruleForm.password,
                         accessStartAt: ruleForm.accessStartAt,
                         accessEndAt: ruleForm.accessEndAt,

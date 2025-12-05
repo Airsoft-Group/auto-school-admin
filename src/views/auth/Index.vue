@@ -21,8 +21,18 @@
                     >
                         <div class="mb-4">
                             <div class="text-left text-sm font-medium mb-1">{{ $t('auth.login_label') }}</div>
-                            <el-form-item prop="email" class="mb-4">
-                                <el-input v-model.trim="ruleForm.email" type="text" autocomplete="off" :placeholder="$t('auth.login_placeholder')" />
+                            <el-form-item prop="phoneNumber" class="mb-4">
+                                <el-input
+                                    v-model.trim="ruleForm.phone"
+                                    type="text"
+                                    autocomplete="off"
+                                    v-mask="'+998 ## ###-##-##'"
+                                    placeholder="(00) 000 00 00"
+                                    class="!h-[44px]"
+                                    :formatter="(value:string) => `+998 ${value}`"
+                                    :parser="(value:string) => value.replace(/\+998\s?/g, '')"
+                                    @blur="validatePhone"
+                                />
                             </el-form-item>
                         </div>
 
@@ -68,13 +78,25 @@ import { useI18n } from 'vue-i18n'
 const store = useUserStore()
 const router = useRouter()
 const ruleFormRef = ref<FormInstance>()
+const i18n = useI18n()
 const { t } = useI18n()
+const phoneError = ref('')
 // Form data matching our new LoginRequest type
 const ruleForm = reactive({
-    email: '',
+    phone: '',
     password: '',
 })
+const validPrefixes = ['90', '91', '93', '94', '95', '97', '98', '99', '33', '50', '55', '77', '88', '20']
+const validatePhone = () => {
+    phoneError.value = ''
 
+    const phone = ruleForm.phone.replaceAll(/\D/g, '')
+    if (phone.length < 9) return
+    const prefix = phone.substring(0, 2)
+    if (!validPrefixes.includes(prefix)) {
+        phoneError.value = i18n.t('validation.invalidPrefix')
+    }
+}
 // Form validation rules
 const rules = reactive<FormRules>({
     email: [
@@ -82,6 +104,20 @@ const rules = reactive<FormRules>({
             required: true,
             message: t('validation.email_required'),
             trigger: 'blur',
+        },
+    ],
+    phone: [
+        {
+            required: true,
+            message: i18n.t('validation.fillField'),
+            trigger: ['blur'],
+        },
+        {
+            type: 'string',
+            required: true,
+            pattern: /^\d{2}\s\d{3}-\d{2}-\d{2}$/,
+            message: i18n.t('validation.pattern'),
+            trigger: ['blur'],
         },
     ],
     password: [
@@ -108,7 +144,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             try {
                 loading.value = true
                 const response = await store.login({
-                    email: ruleForm.email,
+                    phoneNumber: '+998' + ruleForm.phone.replace(/\s|-/g, ''),
                     password: ruleForm.password,
                 })
                 if (response.success) {

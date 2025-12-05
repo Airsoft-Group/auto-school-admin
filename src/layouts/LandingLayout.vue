@@ -24,7 +24,7 @@
                                 {{ user.fullName }}
                             </span>
                             <span class="text-xs text-gray-500">
-                                {{ user.email }}
+                                {{ user.phoneNumber }}
                             </span>
                         </div>
                         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

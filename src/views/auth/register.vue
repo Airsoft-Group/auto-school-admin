@@ -26,12 +26,6 @@
                             </el-form-item>
                         </div>
                         <div class="mb-4">
-                            <div class="text-left text-sm font-medium mb-1">{{ $t('auth.email_label') }}</div>
-                            <el-form-item prop="email" class="mb-4">
-                                <el-input v-model.trim="ruleForm.email" type="text" autocomplete="off" :placeholder="$t('auth.email_label')" />
-                            </el-form-item>
-                        </div>
-                        <div class="mb-4">
                             <div class="text-left text-sm font-medium mb-1">{{ $t('auth.phone_label') }}</div>
                             <el-form-item prop="phoneNumber" class="mb-4">
                                 <el-input
@@ -91,7 +85,6 @@ const { t } = useI18n()
 const phoneError = ref('')
 // Form data matching our new LoginRequest type
 const ruleForm = reactive({
-    email: '',
     password: '',
     fullName: '',
     phoneNumber: '',
@@ -101,7 +94,7 @@ const ruleForm = reactive({
 const rules = reactive<FormRules>({
     email: [
         {
-            required: true,
+            required: false,
             message: t('validation.email_required'),
             trigger: 'blur',
         },
@@ -161,7 +154,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             try {
                 loading.value = true
                 const response = await store.register({
-                    email: ruleForm.email,
                     password: ruleForm.password,
                     fullName: ruleForm.fullName,
                     phoneNumber: ruleForm.phoneNumber.replace(/\s|-/g, ''),

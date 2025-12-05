@@ -26,7 +26,7 @@ export default async function authGuard(to: RouteLocationNormalized, from: Route
 
     if (to.path === '/login' && store.token) {
         const role = store.user?.role
-        if (role === 'super_admin') {
+        if (role === 'super_admin' || role === 'admin') {
             return next('/admin/dashboard')
         } else {
             return next('/')
