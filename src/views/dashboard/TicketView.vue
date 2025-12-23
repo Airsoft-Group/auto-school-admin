@@ -159,8 +159,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 function confirmDelete(ticket: any) {
     ElMessageBox.confirm(`Are you sure you want to delete "${ticket.name}"?`, 'Warning', {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: 'Yes ',
+        cancelButtonText: 'No ',
         type: 'warning',
     })
         .then(async () => {
