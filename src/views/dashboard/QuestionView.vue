@@ -375,7 +375,7 @@ function confirmDelete(question: any) {
         })
         .catch((error: any) => {
             console.log(error)
-            ElMessage.error('Question deleted error')
+            ElMessage.error('Question deleted error ')
         })
 }
 
