@@ -354,7 +354,7 @@ button:disabled {
     cursor: not-allowed;
 }
 .test {
-    background-image: url('@/assets/images/hero.jpg');
+    background-image: url('@/assets/images/cover-image.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
