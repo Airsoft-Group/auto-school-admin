@@ -57,10 +57,10 @@ const router = createRouter({
             meta: { isPublic: true },
         },
         {
+            // Registration is temporarily closed. To reopen, restore:
+            // name: 'register', component: () => import('../views/auth/register.vue'), meta: { isPublic: true }
             path: '/register',
-            name: 'register',
-            component: () => import('../views/auth/register.vue'),
-            meta: { isPublic: true },
+            redirect: '/login',
         },
         {
             path: '/admin',

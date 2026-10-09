@@ -4,7 +4,7 @@
             <img class="w-[50%] h-full object-fill" src="@/assets/images/driving-school-animate.svg" alt="auto-school" />
             <div class="box w-full">
                 <div class="text-center mx-auto w-full max-w-[370px]">
-                    <LogoIcon class="mx-auto fixed top-8 left-8 max-w-[120px]" />
+                    <LogoIcon class="fixed top-8 left-8 z-10" />
                     <h5 class="font-bold text-3xl text-primary">{{ $t('auth.register_title') }}</h5>
                     <p class="text-base mb-6 mt-1 text-[#212121] opacity-50">
                         {{ $t('auth.register_description') }}

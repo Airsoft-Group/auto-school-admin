@@ -4,7 +4,7 @@
             <img class="w-[50%] h-full object-fill" src="@/assets/images/driving-school-animate.svg" alt="auto-school" />
             <div class="box w-full">
                 <div class="text-center mx-auto w-full max-w-[370px]">
-                    <LogoIcon class="mx-auto fixed top-8 left-8 max-w-[120px]" />
+                    <LogoIcon class="fixed top-8 left-8 z-10" />
                     <h5 class="font-bold text-3xl text-primary">{{ $t('auth.login_title') }}</h5>
                     <p class="text-base mb-6 mt-1 text-[#212121] opacity-50">
                         {{ $t('auth.login_description') }}
@@ -48,9 +48,10 @@
                                 />
                             </el-form-item>
                         </div>
-                        <router-link to="/register" class="text-primary font-bold hover:underline text-right mx-auto flex items-center justify-end">{{
+                        <!-- Registration is temporarily closed; restore this link together with the /register route -->
+                        <!-- <router-link to="/register" class="text-primary font-bold hover:underline text-right mx-auto flex items-center justify-end">{{
                             $t('auth.register_link')
-                        }}</router-link>
+                        }}</router-link> -->
                         <div class="flex flex-col py-1 mt-4">
                             <el-button class="w-full" size="large" type="primary" @click="submitForm(ruleFormRef)" :loading="loading">
                                 {{ $t('auth.login_button') }}

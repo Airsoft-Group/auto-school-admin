@@ -2,8 +2,9 @@
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
         <header class="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-20">
-            <h1 class="text-2xl font-extrabold text-gray-800 leading-tight cursor-pointer" @click="router.push('/')">
-                Avto<span class="text-blue-600">School</span>
+            <h1 class="flex items-center gap-2.5 text-2xl font-extrabold text-gray-800 leading-tight cursor-pointer" @click="router.push('/')">
+                <img src="/favicon.svg" alt="AvtoSchool" class="w-9 h-9 shrink-0" />
+                <span>Avto<span class="text-blue-600">School</span></span>
             </h1>
             <div class="flex items-center gap-4">
                 <!-- Language selector -->
